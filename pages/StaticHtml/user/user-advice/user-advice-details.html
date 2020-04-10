@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+	<script src="../../../Dist/assets/js/toast.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">咨询详情</h1>
+    </header>
+
+    <main class="am-padding-vertical-sm">
+		<div class="am-g">
+			<div class="am-u-sm-3">咨询时间:</div>
+			<div class="am-u-sm-9 ADVICETIME"></div>
+		</div>
+		<div class="am-g">
+		  <div class="am-u-sm-3">咨询内容:</div>
+		  <div class="am-u-sm-9 CONTENT"></div>
+		</div>
+		<div class="am-g">
+		  <div class="am-u-sm-3">回复时间:</div>
+		  <div class="am-u-sm-9 ANSWERTIME"></div>
+		</div>
+		<div class="am-g">
+		  <div class="am-u-sm-3">回复内容:</div>
+		  <div class="am-u-sm-9 ANSWERS"></div>
+		</div>
+	</main>
+
+    <div class="am-modal am-modal-loading am-modal-no-btn" id="loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">加载中</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            init()
+        })
+		
+        function init() {
+			var user = JSON.parse(localStorage.getItem("user"));
+			var id = window.location.href.split("ID=")[1];
+			
+			$.ajax({
+                url: serverurl + '/gxfrTL/GetConsultAnswerByID',
+                type: 'get',
+                beforeSend: function () {
+                    $('#loading').modal();
+                },
+                data: {
+                    USERID: user.userId,
+                    ConsultId:id
+                },
+                success: function (res) {
+					var data = JSON.parse(res);
+					 
+					if(data.Data[0]){
+						$(".ADVICETIME").html(data.Data[0].ADVICETIME);
+						$(".CONTENT").html(data.Data[0].CONTENT);
+						$(".ANSWERTIME").html(data.Data[0].ANSWERTIME);
+						$(".ANSWERS").html(data.Data[0].ANSWERS);
+                    } else {
+                        $('main').html('<div class="am-text-center am-padding-top-sm">无数据</div>')
+                    }
+                },complete:function(){
+                    $('#loading').modal();
+                }
+            })
+        }
+    </script>
+</body>
+</html>

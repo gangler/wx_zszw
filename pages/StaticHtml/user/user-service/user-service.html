@@ -1,0 +1,98 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">我的服务</h1>
+    </header>
+
+    <main>
+        <ul class="am-list am-padding-left-sm am-margin-0"></ul>
+    </main>
+
+    <div class="am-modal am-modal-loading am-modal-no-btn" id="loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">加载中</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="template">
+        <li class="am-padding-right-sm">
+            <a href="user-service-details.html?AffairName=[AffairName]&CurrAffairCode=[CurrAffairCode]&TransTime=[TransTime]" class="am-text-primary">
+                <b>[name]</b>
+                <div class="am-margin-vertical-xs font-black font-14">流水单号：[code]</div>
+                <span class="font-14 font-black">[time]</span>
+            </a>
+        </li>
+    </script>
+
+    <script>
+        $(function () {
+            init()
+        })
+
+        function init() {
+            var user = JSON.parse(localStorage.getItem("user"));
+             
+            $.ajax({
+                url: serverurl + '/gxfrTL/getWorkExperienceByUserId',
+                type: 'POST',
+                beforeSend: function () {
+                    $('#loading').modal();
+                },
+                data: {
+                    UserId: user.userId,
+                    UserType: 2
+                },
+                success: function (res) {
+                    if (res.Data.length > 0) {
+                        var source = '';
+                        var html = $("#template").html();
+
+                        $.each(res.Data, function (index, item) {
+                            source += html.replace('[AffairName]', item.AffairName)
+                            .replace('[name]', item.AffairName)
+                            .replace('[CurrAffairCode]', item.CurrAffairCode)
+                            .replace('[code]', item.CurrAffairCode)
+                            .replace('[TransTime]', item.TransTime)
+                            .replace('[time]', item.TransTime.replace('T', ' '))
+                        });
+
+                        $("ul").html(source);
+                    } else {
+                        $('main').html('<div class="am-text-center am-padding-top-sm">无数据</div>')
+                    }
+                },complete:function(){
+                    $('#loading').modal();
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

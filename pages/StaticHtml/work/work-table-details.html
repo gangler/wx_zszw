@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit" />
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css" />
+    <link rel="stylesheet" href="../../Dist/lib/PDFH5/style.css" />
+    <link rel="stylesheet" href="../../Dist/lib/PDFH5/pdfh5.css" />
+    <style>
+        main {
+            position: fixed;
+            top: 49px;
+            bottom: 49px;
+            left: 0;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 id="h1" class="am-header-title font-14"></h1>
+    </header>
+
+    <main id="main"></main>
+
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../Dist/lib/PDFH5/pdf.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/pdf.worker.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/pdfh5.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        window.onload = function () {
+            var type = window.location.href.match(/type=(\S*)&src/)[1];
+            var src = decodeURI(window.location.href.match(/src=(\S*)&/)[1]);
+            var name = decodeURI(window.location.href.split('name=')[1]);
+
+            if (type == 0) {
+                $('main').html( '<div class="am-padding-sm flex"><b class="nowrap">文件名称：</b>' + name + '</div>' +
+                                '<div class="am-g">' +
+                                '<div class="am-u-sm-6"><a href="' + src + '" class="am-btn-block am-radius am-btn am-btn-warning">打开</a></div>' +
+                                '<div class="am-u-sm-6"><a href="' + src + '" class="am-btn-block am-radius am-btn am-btn-warning">编辑</a></div>' +
+                                '</div>')
+            } else {
+                new Pdfh5('main', {
+                    pdfurl: src
+                });
+            }
+
+            $('h1').html(name)
+        }
+    </script>
+</body>
+
+</html>

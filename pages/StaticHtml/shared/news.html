@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit" />
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css" />
+    
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header am-g am-text-center am-header-default">
+        <h1 class="am-header-title">最新资讯</h1>
+    </header>
+
+    <main>
+        <div data-am-widget="tabs" class="am-tabs am-tabs-d2 am-margin-0">
+            <ul class="am-tabs-nav am-cf" id="news-tab"></ul>
+            <div class="am-tabs-bd" id="news-container"></div>
+        </div>
+    </main>
+
+    <script type="text/html" id="Template">
+        <ul class="am-list am-margin-0">
+            <li>
+                <a href="news-details.html?id=[id]">
+                    <div class="am-g flex align-center">
+                        <div class="am-u-sm-5">
+                            <img src='[src]'>
+                        </div>
+                        <div class="am-u-sm-7">
+                            <p class="ellipsis-2 am-margin-0 am-text-sm">[title]</p>
+                            <span class="am-text-xs am-block am-margin-top-sm am-text-left">[date]</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </script>
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script>
+        $(function () {
+            getCategory();
+            getList(1);
+            
+        })
+        function getCategory() {
+            $.ajax({
+                url: serverurl + '/gxsdapi/get_information_category',
+                success: function (res) {
+                    var html = '';
+
+                    $.each(res.data, function (index, item) {
+                        if (index == 0) {
+                            html += '<li class="am-active"><a onclick="getList(' + item.category_id + ')">' + item.category + '</a></li>';
+                        } else {
+                            html += '<li><a onclick="getList(' + item.category_id + ')">' + item.category + '</a></li>';
+                        }
+
+                    });
+
+                    $('#news-tab').html(html);
+                }
+            })
+        }
+
+        function getList(id) {
+            $.ajax({
+                url: serverurl + '/gxsdapi/get_information_list',
+                data: {
+                    category_id: id
+                },
+                success: function (res) {
+                    var picture = '';
+                    var source = '';
+                    var html = $("#Template").html();
+
+                    $.each(res.data.data, function (index, item) {
+                        if (item.picture == '') {
+                            picture = '../../Dist/assets/img/img-404.png'
+                        } else {
+                            picture = item.picture;
+                        }
+
+                        source += html.replace('[id]', item.informationId)
+                            .replace('[src]', picture)
+                            .replace('[title]', item.title)
+                            .replace('[date]', item.publishTime)
+                    });
+
+                    $("#news-container").html(source);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">办事流程</h1>
+    </header>
+
+    <main>
+        <article class="am-padding-sm">
+            <strong></strong>
+            <div class="font-14 am-margin-vertical-xs am-text-primary">网上办事</div>
+            <div class="font-14 am-text-primary"></div>
+            <span class="font-14 am-text-primary"></span>
+        </article>
+        <ol class="am-list am-padding-left-sm am-margin-0"></ol>
+    </main>
+    
+    <footer data-am-widget="navbar" class="am-navbar am-cf am-text-center am-btn-primary font-white" onclick="window.history.back()">返回</footer>
+
+    <script>
+
+        $(function(){
+            getUserServiceDEtails()
+        })
+
+        function getUserServiceDEtails(){
+            var AffairName = decodeURI(window.location.href.match(/AffairName=(\S*)&CurrAffairCode/)[1]);
+            var CurrAffairCode = window.location.href.match(/CurrAffairCode=(\S*)&TransTime/)[1];
+            var TransTime = window.location.href.split('TransTime=')[1];
+            
+            $('article>strong').html(AffairName);
+            $('article div').eq(1).html(CurrAffairCode);
+            $('article>span').html(TransTime.replace('T',' '));
+            
+            $.ajax({
+                url:serverurl + '/gxfrTL/getWorkFlowByCurrAffairCode',
+                type: 'POST',
+                data:{
+                    CurrAffairCode:CurrAffairCode,
+                    UserType:2
+                },
+                success:function(res){
+                    if(res.Data.length > 0){
+                        var html = '';
+
+                        $.each(res.Data,function(index,item){
+                            index += 1;
+                            html += '<li class="am-padding-vertical-sm am-g am-g-collapse">'+
+                                    '<div class="am-u-sm-2"><span class="am-badge am-badge-primary am-round">'+index+'</span></div>'+
+                                    '<div class="am-u-sm-10">'+
+                                    '<div>状态：'+item.AffairFlowName+'</div>'+
+                                    '<div class="am-margin-vertical-xs">结果：'+item.FlowResultName+' '+item.OperaorTime.replace('T',' ')+'</div>'+
+                                    '</div>'+
+                                    '</li>';
+                        });
+
+                        $('ol').html(html);
+                    }
+                }
+            })
+        }
+    </script>
+
+    
+</body>
+
+</html>

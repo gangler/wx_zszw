@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit" />
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css" />
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header am-header-default am-header-fixed">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title"></h1>
+    </header>
+
+    <main class="am-padding-sm"></main>
+
+    <script>
+        $(function () {
+            var id = window.location.href.split("=")[1];
+            
+            $.ajax({
+                url: serverurl + '/gxsdapi/get_information',
+                data: {
+                    information_id: id,
+                    UserType: 2
+                },
+                success: function (res) {
+                    $('h1').html(res.data.title)
+                    $('main').html(res.data.content);
+                }
+            })
+        })        
+    </script>
+</body>
+
+</html>

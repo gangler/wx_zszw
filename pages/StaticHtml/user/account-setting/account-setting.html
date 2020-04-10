@@ -1,0 +1,263 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">账户设置</h1>
+    </header>
+
+    <main>
+        <ul class="am-list margin-0">
+            <li class="am-padding-sm" onclick="changePassword()">
+                <i class="am-icon-lock"></i> 修改密码<span class="am-fr am-icon-angle-right"></span>
+            </li>
+            <li class="am-padding-sm" onclick="getState('personal')">
+                <i class="am-icon-shield"></i> 个人实名认证<span class="am-fr am-icon-angle-right"></span>
+            </li>
+            <li class="am-padding-sm" onclick="getState('company')">
+                <i class="am-icon-shield"></i> 企业实名认证<span class="am-fr am-icon-angle-right"></span>
+            </li>
+        </ul>
+    </main>
+
+    <div class="am-modal am-modal-prompt" tabindex="-1" id="Password-prompt">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">修改密码</div>
+            <div class="am-modal-bd">
+                <div class="am-input-group am-margin-bottom-sm">
+                    <span class="am-input-group-label">旧密码</span>
+                    <input type="password" id="oPassword" class="am-form-field am-modal-prompt-input am-margin-0">
+                </div>
+                <div class="am-input-group am-margin-bottom-sm">
+                    <span class="am-input-group-label">新密码</span>
+                    <input type="password" id="nPassword" class="am-form-field am-modal-prompt-input am-margin-0"
+                           placeholder="6-16位数字与字母的组合">
+                </div>
+                <div class="am-margin-bottom-sm am-g am-g-collapse">
+                    <div class="am-u-sm-8">
+                        <div class="am-input-group am-margin-bottom-sm">
+                            <span class="am-input-group-label">验证码</span>
+                            <input type="text" id="code" oninput="if(value.length>4)value=value.slice(0,4)" class="am-form-field am-modal-prompt-input am-margin-0">
+                        </div>
+                    </div>
+                    <div class="am-u-sm-4">
+                        <canvas width="100" height="40" id="verifyCanvas"></canvas>
+                        <img width="100" height="38" id="code_img">
+                    </div>
+                </div>
+
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../../Dist/assets/js/md5.js"></script>
+    <script src="../../../Dist/assets/js/toast.js"></script>
+    <script>
+        $(function () {
+            drawCode();
+            //getState();
+         })
+
+        var MathCode;
+        var nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+
+        function getState(value) {
+            var user = JSON.parse(localStorage.getItem("user"));
+            var state = '';
+            var organizationcertified = '';
+
+            $.ajax({
+                url: serverurl + '/gxfrTL/getState',
+                data: {
+                    mobile: user.mobile
+                },
+                success: function (res) {
+				console.log(res)
+                    state = res.Data.state;
+                    organizationcertified = res.Data.organizationcertified;
+
+                    if (value == 'personal') {
+                        if (state == 0 || state == 3) {
+                            window.location.href = "personal-certification.html"
+                        } else if (state == 1) {
+                            toast('审核中')
+                        } else {
+                            toast('已认证')
+                        }
+                    } else {
+                        if (organizationcertified == 0 || organizationcertified == 3) {
+                            window.location.href = "enterprise-certification.html"
+                        } else if (organizationcertified == 1) {
+                            toast('审核中')
+                        } else {
+                            toast('已认证')
+                        }
+                    }
+                }
+            });
+            
+        }
+
+        function changePassword() {
+            $('#Password-prompt').modal({
+                relatedTarget: this,
+                closeOnConfirm: false,
+                onCancel: function () {
+                    $('#oPassword').val('');
+                    $('#nPassword').val('');
+                    $('#code').val('');
+                },
+                onConfirm: function (e) {
+                    var oPassword = $.md5('YZD1234567890' + e.data[0]);
+                    var nPassword = $.md5('YZD1234567890' + e.data[1]);
+                    var code = e.data[2];
+                    if (e.data[0].length < 6) {
+                        toast("旧密码至少6位数");
+                    }  else if (!e.data[1].match(/\d/) || !e.data[1].match(/[a-zA-Z]/) || e.data[1].length < 6) {
+                        toast("新密码至少6位数,且包含一个数字和一个字母");
+                    } else if (code !== MathCode) {
+                        toast('请输入正确的验证码')
+                    } else {
+                        var user = JSON.parse(localStorage.getItem("user"));
+                        var username = user.username;
+                        var log_verify_code = user.log_verify_code;
+						console.log(user.username)
+                        console.log(oPassword)
+                        console.log(nPassword)
+						console.log(log_verify_code)
+                        $.ajax({
+                            url: serverurl + '/gxfrTL/changePassword',
+                            data: {
+                                password: oPassword,
+                                newPassword: nPassword,
+                                log_verify_code: log_verify_code,
+                                UserType: 2,
+                            },
+                            success: function (res) {
+								console.log(res)
+                                  if (res.data == null) {
+                                    alert('账号或者密码错误')
+                                } else {
+                                    alert('修改成功');
+                                    $('#Password-prompt').modal();
+
+                                    $.ajax({
+                                        url: serverurl + '/gxfrTL/login',
+                                        type: 'POST',
+                                        data: {
+                                            username: username,
+                                            password: nPassword,
+                                            device_token: '',
+                                            UserType: 2
+                                        },
+                                        success: function (res) {
+                                            console.log(res.data);
+											location.reload();
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+
+        // 绘制验证码
+        function drawCode() {
+            var canvas = document.getElementById("verifyCanvas");  //获取HTML端画布
+            var context = canvas.getContext("2d");                 //获取画布2D上下文
+            context.fillStyle = "cornflowerblue";                  //画布填充色
+            context.fillRect(0, 0, canvas.width, canvas.height);   //清空画布
+            context.fillStyle = "white";                           //设置字体颜色
+            context.font = "25px Arial";                           //设置字体
+            var rand = new Array();
+            var x = new Array();
+            var y = new Array();
+            for (var i = 0; i < 4; i++) {
+                rand[i] = nums[Math.floor(Math.random() * nums.length)]
+                x[i] = i * 16 + 10;
+                y[i] = Math.random() * 20 + 20;
+                context.fillText(rand[i], x[i], y[i]);
+            }
+            MathCode = rand.join('');
+
+            //画3条随机线
+            for (var i = 0; i < 3; i++) {
+                drawline(canvas, context);
+            }
+
+            // 画30个随机点
+            for (var i = 0; i < 30; i++) {
+                drawDot(canvas, context);
+            }
+            convertCanvasToImage(canvas)
+        }
+
+        // 随机线
+        function drawline(canvas, context) {
+            context.moveTo(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height));             //随机线的起点x坐标是画布x坐标0位置，y坐标是画布高度的随机数
+            context.lineTo(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height));  //随机线的终点x坐标是画布宽度，y坐标是画布高度的随机数
+            context.lineWidth = 0.5;                                                  //随机线宽
+            context.strokeStyle = 'rgba(50,50,50,0.3)';                               //随机线描边属性
+            context.stroke();                                                         //描边，即起点描到终点
+        }
+
+        // 随机点(所谓画点其实就是画1px像素的线，方法不再赘述)
+        function drawDot(canvas, context) {
+            var px = Math.floor(Math.random() * canvas.width);
+            var py = Math.floor(Math.random() * canvas.height);
+            context.moveTo(px, py);
+            context.lineTo(px + 1, py + 1);
+            context.lineWidth = 0.2;
+            context.stroke();
+        }
+
+        // 绘制图片
+        function convertCanvasToImage(canvas) {
+            document.getElementById("verifyCanvas").style.display = "none";
+            var image = document.getElementById("code_img");
+            image.src = canvas.toDataURL("image/png");
+            return image;
+        }
+
+        // 点击图片刷新
+        document.getElementById('code_img').onclick = function () {
+            $('#verifyCanvas').remove();
+            $('#code_img').before('<canvas width="100" height="40" id="verifyCanvas"></canvas>')
+            drawCode();
+        }
+    </script>
+</body>
+
+</html>

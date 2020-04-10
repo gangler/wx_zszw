@@ -1,0 +1,89 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css">
+    
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">申请办事</h1>
+    </header>
+
+    <main>
+        <section>
+            <h3 class="am-margin-0 am-padding-sm">基本信息<span class="font-red am-text-xs am-padding-left-sm">根据实际情况选择一项</span>
+            </h3>
+            <ul class="am-list am-margin-0"></ul>
+        </section>
+    </main>
+
+    <footer data-am-widget="navbar" class="am-navbar am-cf am-text-center bg-blue font-white" onclick="next()">下一步</footer>
+
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../Dist/assets/js/toast.js"></script>
+    <script>
+        $(function () {
+            getMatter();
+        })
+
+        var Affairid = window.location.href.match(/Affairid=(\S*)&AffairCode/)[1];
+        var AffairCode = window.location.href.split('AffairCode=')[1];
+
+        function getMatter() {
+            $.ajax({
+                url: serverurl + '/gxfrTL/getMaterialsByObject',
+                data: {
+                    AffairId: Affairid,
+                    UserType:2
+                },
+                success: function (res) {
+                    console.log(res.Data)
+                    var html = '';
+                    $.each(res.Data, function (index, item) {
+                        html += '<li class="am-padding-left-sm">' +
+                                '<div class="am-radio">'+
+                                '<label class="am-block">'+
+                                '<input type="radio" name="doc-radio-1" data-Objindex="' + item.OBJINDEX+'" data-id="'+item.AFFAIRID+'" value="'+item.MATOBJID+'">'+item.OBJNAME+''+
+                                '</label>'+
+                                '</div>'+
+                                '</li>';
+                    });
+                    $('.am-list').html(html);
+                }
+            })
+        }
+
+        function next(){
+            var ObjectId = $('input:radio[name="doc-radio-1"]:checked').val();
+            var AffairId = $('input:radio[name="doc-radio-1"]:checked').attr('data-id');
+            var Objindex = $('input:radio[name="doc-radio-1"]:checked').attr('data-Objindex');
+            
+            if(ObjectId){
+                window.location.href = 'work-online.html?AffairId=' + AffairId + '&Objindex=' + Objindex+'&AffairCode='+AffairCode+'&ObjectId='+ObjectId+''
+            }else{
+                toast("请选择类型");
+            }
+        }
+    </script>
+</body>
+
+</html>

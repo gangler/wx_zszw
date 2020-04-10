@@ -1,0 +1,325 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css">
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">个人信息</h1>
+    </header>
+
+    <main>
+        <ul class="am-list">
+            <li class="am-padding-sm">
+                <span>用户名</span>
+                <span class="am-fr" id="username"></span>
+            </li>
+            <li class="am-padding-horizontal-sm am-padding-vertical-xs flex align-center justify-between">
+                <span>姓名</span>
+                <div class="am-input-group">
+                    <input type="text" id="name" class="am-form-field border-0 am-text-right" placeholder="请输入姓名">
+                </div>
+            </li>
+            <li class="am-padding-sm" onclick="changeSex()">
+                <span>性别</span>
+                <div class="am-fr">
+                    <span id="sex"></span>
+                    <span class="am-icon-angle-right"></span>
+                </div>
+            </li>
+            <li class="am-padding-sm">
+                <span>地址(省/市/区)</span>
+            </li>
+            <li class="am-padding-sm" onclick="ValidatorOriginalMobile()">
+                <span>联系电话</span>
+                <div class="am-fr">
+                    <span id="mobile"></span>
+                    <span class="am-icon-angle-right"></span>
+                </div>
+            </li>
+        </ul>
+
+        <div class="am-text-center">
+            <button type="button" onclick="changeUserInfo()" class="am-btn am-btn-primary am-padding-horizontal-lg am-round">保存信息</button>
+        </div>
+    </main>
+
+    <div class="am-modal-actions" id="sex-actions">
+        <div class="am-modal-actions-group">
+            <ul class="am-list">
+                <li><a>男</a></li>
+                <li><a>女</a></li>
+            </ul>
+        </div>
+        <div class="am-modal-actions-group">
+            <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+        </div>
+    </div>
+
+    <div class="am-modal am-modal-prompt" tabindex="-1" id="OriginalMobile-prompt">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">修改手机</div>
+            <div class="am-modal-bd">
+                <div class="am-input-group am-margin-bottom-sm">
+                    <span class="am-input-group-label">原手机号码</span>
+                    <input type="number" id="OriginalMobile" class="am-form-field am-modal-prompt-input margin-0">
+                </div>
+                <div class="am-input-group am-margin-bottom-sm">
+                    <input type="number" id="OriginalMobilecode"
+                           class="am-form-field am-modal-prompt-input margin-0 font-12" placeholder="请输入验证码">
+                    <span class="am-input-group-label" id="OriginalMobileSpan" onclick="getOriginalCode()">获取</span>
+                </div>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-modal am-modal-prompt" tabindex="-1" id="NewMobile-prompt">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">修改手机</div>
+            <div class="am-modal-bd">
+                <div class="am-input-group am-margin-bottom-sm">
+                    <span class="am-input-group-label">新手机号码</span>
+                    <input type="number" id="NewMobile" class="am-form-field am-modal-prompt-input am-margin-0">
+                </div>
+                <div class="am-input-group am-margin-bottom-sm">
+                    <input type="number" id="NewMobilecode" class="am-form-field am-modal-prompt-input am-margin-0 font-12"
+                           placeholder="请输入验证码">
+                    <nipu class="am-input-group-label" id="NewMobileSpan" onclick="getNewCode()">获取</nipu>
+                </div>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/md5.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script>
+        $(function () {
+            getUserInfo();
+        })
+
+        function changeUserInfo() {
+            var name = $('#name').val();
+            var sex = $('#sex').attr('data-index');
+            if (name == '') {
+                toast('请输入姓名')
+            } else {
+                $.ajax({
+                    url: serverurl + '/gxfrTL/updateUserInformation',
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        sex: sex,
+                        log_verify_code: log_verify_code
+                    },
+                    success: function (res) {
+                        toast('保存成功')
+                        window.location.reload()
+                    }
+                })
+            }
+        }
+
+        var OriginalMobilecode;
+        var NewMobilecode;
+        var log_verify_code;
+
+        function getUserInfo() {
+            $.ajax({
+                url: serverurl + '/gxfrTL/login',
+                type: 'POST',
+                data: {
+                    username: '18762818465',
+                    password: '0b1a0e1e5c2add47f6200cc8b2b1c348',
+                    device_token: '',
+                    UserType: 2
+                },
+                success: function (res) {
+                    console.log(res);
+                    if (res.data.sex == 0) {
+                        $('#sex').html('男').attr('data-index', res.data.sex)
+                    } else {
+                        $('#sex').html('女').attr('data-index', res.data.sex)
+                    }
+                    $('#username').html(res.data.username);
+                    $('#name').val(res.data.name);
+                    $('#mobile').html(res.data.mobile);
+                    $('#OriginalMobile').val(res.data.mobile);
+                    log_verify_code = res.data.log_verify_code;
+                }
+            })
+        }
+
+        function changeSex() {
+            $('#sex-actions').modal();
+        }
+
+        function ValidatorOriginalMobile() {
+            $('#OriginalMobile-prompt').modal({
+                relatedTarget: this,
+                closeOnConfirm: false,
+                onCancel: function (e) {
+                    window.location.reload();
+                },
+                onConfirm: function (e) {
+                    var beforeMobile = $('#OriginalMobile').val();
+                    var beforeMobileCode = $('#OriginalMobilecode').val();
+
+                    if (beforeMobile == '' || beforeMobile.length > 11 || beforeMobile.length < 11) {
+                        toast('请输入正确的手机号')
+                    } else if (beforeMobileCode == OriginalMobilecode) {
+                        $('#OriginalMobile-prompt').modal();
+                        $('#NewMobile-prompt').modal({
+                            relatedTarget: this,
+                            closeOnConfirm: false,
+                            onCancel: function (e) {
+                                window.location.reload();
+                            },
+                            onConfirm: function (e) {
+                                var afterMobile = $('#NewMobile').val();
+                                var afterMobileCode = $('#NewMobilecode').val();
+
+                                if (afterMobile == '' || afterMobile.length > 11 || afterMobile.length < 11) {
+                                    toast('请输入手机号')
+                                } else if (afterMobileCode == NewMobilecode) {
+                                    $.ajax({
+                                        url: serverurl + '/gxfrTL/changeMobile',
+                                        type: 'POST',
+                                        data: {
+                                            NewMobile: afterMobile,
+                                            OriginalMobile: beforeMobile,
+                                            NewMobilecode: afterMobileCode,
+                                            OriginalMobilecode: beforeMobileCode,
+                                            Type: 'user_type',
+                                            log_verify_code: log_verify_code,
+                                            UserType: 2
+                                        },
+                                        success: function (res) {
+                                            console.log(res);
+                                            toast('修改成功');
+                                            window.location.reload()
+                                        }
+                                    })
+                                } else {
+                                    toast('请输入正确的验证码')
+                                }
+                            }
+                        })
+                    } else {
+                        toast('请输入正确的验证码')
+                    }
+                }
+            })
+        }
+
+        function getOriginalCode() {
+            var OriginalMobile = $('#OriginalMobile').val();
+            $.ajax({
+                url: serverurl + '/gxfrTL/sendVerifyCode',
+                type: 'POST',
+                data: {
+                    mobile: OriginalMobile,
+                    type: 0,
+                    UserType: 2
+                },
+                success: function (res) {
+                    var span = document.getElementById('OriginalMobileSpan');
+                    if (res.data == null) {
+                        toast(res.message);
+                    } else {
+                        OriginalMobilecode = res.data.verifyCode;
+                        var codeTime = 60;
+                        var time = setInterval(function () {
+                            codeTime--;
+                            if (codeTime == 0) {
+                                clearInterval(time);
+                                span.innerHTML = '获取';
+                                span.addEventListener('click', getOriginalCode, false)
+                            } else {
+                                span.innerHTML = codeTime;
+                                span.onclick = null;
+                            };
+                        }, 1000);
+                    }
+                }
+            })
+        }
+
+        function getNewCode() {
+            var NewMobile = $('#NewMobile').val();
+            $.ajax({
+                url: serverurl + '/gxfrTL/sendVerifyCode',
+                type: 'POST',
+                data: {
+                    mobile: NewMobile,
+                    type: 0,
+                    UserType: 2
+                },
+                success: function (res) {
+                    var span = document.getElementById('NewMobileSpan');
+                    if (res.data == null) {
+                        toast(res.message);
+                    } else {
+                        NewMobilecode = res.data.verifyCode;
+                        var codeTime = 60;
+                        var time = setInterval(function () {
+                            codeTime--;
+                            if (codeTime == 0) {
+                                clearInterval(time);
+                                span.innerHTML = '获取';
+                                span.addEventListener('click', getOriginalCode, false)
+                            } else {
+                                span.innerHTML = codeTime;
+                                span.onclick = null;
+                            };
+                        }, 1000);
+                    }
+                }
+            })
+        }
+
+        $('#sex-actions ul li').on('click', function () {
+            var index = $(this).index();
+            var text = $(this).text();
+            $('#sex').html(text);
+            $('#sex').attr('data-index', index);
+            $('#sex-actions').modal();
+        })
+
+        function toast(message) {
+            $("body").append('<div class="table-message"></div>');
+            $(".table-message").html(message);
+            setTimeout(function () {
+                $(".table-message").remove()
+            }, 1000)
+        }
+    </script>
+</body>
+
+</html>

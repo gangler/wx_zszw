@@ -1,0 +1,199 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+	<script src="../../../Dist/assets/js/toast.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">我的咨询</h1>
+		<div class="am-header-right am-header-nav font-black">	 
+			<select id="selected" data-am-selected="{btnWidth: 'auto', btnSize: 'sm', btnStyle: 'primary'}">
+			    <option value="-1">全部</option>
+			    <option value="0">处理中</option>
+			    <option value="1">已处理</option>
+			</select>
+		</div>
+    </header>
+
+	<nav data-am-widget="navbar" class="am-navbar bg-blue font-white am-text-center" data-am-modal="{target: '#my-popup'}">新建</nav>
+	
+    <main>
+        <ul class="am-list am-padding-left-sm am-margin-0"></ul>
+    </main>
+
+    <div class="am-modal am-modal-loading am-modal-no-btn" id="loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">加载中</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
+        </div>
+    </div>
+	
+	<div class="am-popup" id="my-popup">
+	  <div class="am-popup-inner">
+		<div class="am-popup-hd">
+		  <h4 class="am-popup-title">问题描述</h4>
+		  <span data-am-modal-close class="am-close">&times;</span>
+		</div>
+		<div class="am-popup-bd">
+			<form class="am-form">
+				<dl>
+					<dt>咨询须知</dt>
+					<dd>一、受理范围：本栏目接受个人、法人对全省各政府部门行政审批工作、综合服务、公共资源交易等办事过程中有关法规、政策、程序等问题的咨询。</dd>
+					<dd>二、处理时间：一般信件要求在3个工作日内办结；情况复杂的，可以适当延长办理期限，但延长期限不得超过2个工作日。本栏目答复是一种指导性意见 ，不具有法定效力。具体问题要通过法定途径（诉讼、复议、信访等）解决。</dd>
+					<dd>三、请勿重复提交咨询咨询，如果您重复提交，我们将只受理您若干问题中的一个。</dd>
+					<dd>四、不属于本栏目受理范围的问题视为无效问题，本栏目管理人员有权对此删改并不再告知。</dd>
+					<dt>信息填写</dt>
+					<dd>
+						<textarea rows="5" id="textContent" placeholder="请填写问题描述，字数不要超过500字"></textarea>
+					</dd>
+				</dl>
+				<p class="am-text-center"><button type="button" onclick="add()" class="am-btn am-btn-primary am-btn-block">提交</button></p>
+			</form>
+		</div>
+	  </div>
+	</div>
+	
+    <script type="text/html" id="template">
+        <li class="am-g flex align-center am-g-collapse" onclick="details([STATE1],[ID])">
+			<a class="am-text-primary am-u-sm-11">
+				<b class="am-text-truncate am-block">[CONTENT]</b>
+				<div class="am-margin-vertical-xs font-black font-14">
+					<span>编号：[INDEX]</span>
+					<span class="am-margin-left-lg">资讯状态：[STATE]</span>
+				</div>
+				<span class="font-14 font-black">[TIME]</span>
+			</a>
+			<span class="am-u-sm-1 am-text-center am-icon-angle-right am-text-xxl"></span>
+		</li>
+    </script>
+
+    <script>
+        $(function () {
+            init(-1)
+        })
+		
+		var user = JSON.parse(localStorage.getItem("user"));
+		
+		$('#selected').on('change', function (e) {
+			init(e.target.value)
+        })
+		
+		function details(STATE1,ID){
+			if(STATE1 == 0){
+				toast("处理中")
+			}else{
+				window.location.href = 'user-advice-details.html?ID='+ID
+			}
+		}
+		
+		function add(){
+			if($("#textContent").val()!=''){
+				$.ajax({
+					url: serverurl + '/gxfrTL/AddConsult',
+					type: 'POST',
+					beforeSend: function () {
+						$('#loading').modal();
+					},
+					data: {
+						"USERID":user.userId,
+						"USERNAME":user.p_name,
+						"CONTENT":$("#textContent").val(),
+						"TIME":nowTime(),
+						"MOBILE":user.mobile
+					},
+					success: function (res) {
+						toast("提交成功")
+					},complete:function(){
+						$('#loading').modal();
+						$("#my-popup").modal();
+						$('#loading').modal();
+						init();
+						location.reload()
+					}
+				})
+			}else{
+				toast("请填写问题描述")
+			}
+		}
+		
+        function init(val) {
+			$.ajax({
+                url: serverurl + '/gxfrTL/GetMyConsult',
+                type: 'get',
+                beforeSend: function () {
+                    $('#loading').modal();
+                },
+                data: {
+                    USERID: user.userId,
+                    State:val
+                },
+                success: function (res) {
+					var data = JSON.parse(res);
+					 
+                    if (data.Data) {
+						var source = '';
+                        var html = $("#template").html();
+
+                        $.each(data.Data, function (index, item) {
+							source += html.replace('[CONTENT]', item.CONTENT)
+                            .replace('[INDEX]', index+1)
+							.replace('[STATE]', item.STATE==0?'处理中':'已处理')
+							.replace('[STATE1]', item.STATE)
+                            .replace('[TIME]', item.TIME.replace('T', ' '))
+							.replace('[ID]', item.ID)
+                        });
+
+                        $(".am-list").html(source);
+                    } else {
+                        $('main').html('<div class="am-text-center am-padding-top-sm">无数据</div>')
+                    }
+                },complete:function(){
+                    $('#loading').modal();
+                }
+            })
+        }
+		
+		function nowTime(){
+			let dateNow = null;
+			let year = new Date().getFullYear();
+			let month = new Date().getMonth() + 1;
+			let date = new Date().getDate();
+			let h = new Date().getHours();
+			let m = new Date().getMinutes();
+			let s = new Date().getSeconds();
+			
+			if (month<10) month = '0' + month;
+			if (date<10) date = '0' + date;
+			if (h<10) h = '0' + h;
+			if (m<10) m = '0' + m;
+			if (s<10) s = '0' + s;
+			
+			return dateNow = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+		}
+    </script>
+</body>
+
+</html>

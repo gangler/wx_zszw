@@ -1,0 +1,177 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">个人实名认证</h1>
+    </header>
+
+    <main>
+        <ul class="am-list margin-0" id="personal-ul">
+            <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                <span class="am-u-sm-4">姓名</span>
+                <span class="am-u-sm-8">
+                    <input type="text" id="name" value="" class="am-text-right am-form-field border-0" placeholder="请输入姓名">
+                </span>
+            </li>
+            <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                <span class="am-u-sm-4">身份证</span>
+                <span class="am-u-sm-8">
+                    <input type="text" id="number" value="" class="am-text-right am-form-field border-0" placeholder="请输入18位身份证号">
+                </span>
+            </li>
+            <li class="am-padding-bottom-sm">
+                <p class="am-margin-0 am-padding-sm">身份证正、反照片</p>
+                <div class="am-g flex align-center">
+                    <div class="am-u-sm-6">
+                        <label id="label_1" for="id_card1" class="am-margin-0">
+                            <img src="../../../Dist/assets/img/upload_zheng.png" alt="">
+                        </label>
+                        <input type="file" onchange="upload(this,1)" id="id_card1" class="am-hide" accept="image/*">
+                    </div>
+                    <div class="am-u-sm-6">
+                        <img id="id_img" src="../../../Dist/assets/img/zheng.png" alt="">
+                    </div>
+                </div>
+                <div class="am-g am-margin-top-sm">
+                    <div class="am-u-sm-6">
+                        <label id="label_2" for="id_card2" class="am-margin-0">
+                            <img src="../../../Dist/assets/img/upload_fan.png" alt="">
+                        </label>
+                        <input type="file" onchange="upload(this,2)" id="id_card2" class="am-hide" accept="image/*">
+                    </div>
+                    <div class="am-u-sm-6">
+                        <img src="../../../Dist/assets/img/fan.png" alt="">
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="am-padding-sm am-text-center">
+            <button onclick="submit()" class="am-btn am-btn-primary am-round">确定提交</button>
+        </div>
+
+        <div class="am-modal am-modal-loading am-modal-no-btn" id="uploadFile-loading">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">上传中</div>
+                <div class="am-modal-bd">
+                    <span class="am-icon-spinner am-icon-spin"></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../../Dist/assets/js/md5.js"></script>
+    <script src="../../../Dist/assets/js/toast.js"></script>
+    <script>
+        var user = JSON.parse(localStorage.getItem("user"));
+        var log_verify_code = user.log_verify_code;
+        var mater_positive;
+        var mater_opposite;
+
+        function upload(that, num) {
+            var files = that.files;
+            var reader = new FileReader();
+
+            reader.readAsDataURL(files[0]);
+            reader.onload = function (e) {
+                var File = this.result.split(",")[1];
+                var type = files[0].name.split('.')[1];
+                var height = $('#id_img').height();
+                var img = '<img style="height:' + height + 'px" src="' + this.result + '">';
+                $('#label_' + num + '').html(img);
+
+                $.ajax({
+                    url: serverurl + '/gxfrTL/uploadFile',
+                    type: 'POST',
+                    beforeSend: function () {
+                        $('#uploadFile-loading').modal();
+                    },
+                    data: {
+                        GuId: '89a627f1-c998-4002-a885-6e5c9daafaa7',
+                        type: type,
+                        File: File,
+                        Ftype: 2,
+                        log_verify_code: log_verify_code
+                    },
+                    success: function (res) {
+                        if (num == 1) {
+                            mater_positive = serverurl +  res.data;
+                        } else {
+                            mater_opposite = serverurl +  res.data;
+                        }
+                    },
+                    complete: function () {
+                        $('#uploadFile-loading').modal();
+                    }
+                })
+            }
+        }
+
+        function submit() {
+            var name = $('#name').val();
+            var number = $('#number').val();
+            var idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+
+            if (name == '') {
+                toast('请输入姓名')
+            } else if (number == '') {
+                toast('请输入身份证号')
+            } else if (!idcardReg.test(number)) {
+                toast('请输入正确的身份证号')
+            } else if (mater_positive == undefined) {
+                toast('请上传身份证正面图片')
+            } else if (mater_opposite == undefined) {
+                toast('请上传身份证反面图片')
+            } else {
+			console.log(name)
+			console.log(number)
+			console.log(mater_positive)
+			console.log(mater_opposite)
+			console.log(log_verify_code)
+                 $.ajax({
+                    url: serverurl + '/gxfrTL/updateUserAuthentication',
+                    type: 'POST',
+                    data: {
+                        p_name: name,
+                        id_card: number,
+                        mater_positive: mater_positive,
+                        mater_opposite: mater_opposite,
+                        UserType: 2,
+                        log_verify_code: log_verify_code
+                    },
+                    success: function (res) {
+						console.log(res)
+                        toast('提交成功');
+                        setTimeout(function () {
+                            window.location.href = "account-setting.html";
+                        }, 1000)
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>

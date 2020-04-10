@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit" />
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css" />
+    <link rel="stylesheet" href="../../Dist/lib/PDFH5/style.css" />
+	<link rel="stylesheet" href="../../Dist/lib/PDFH5/pdfh5.css" />
+
+    <style>
+        main {
+            position: fixed;
+            top: 49px;
+            bottom: 49px;
+            left: 0;
+            right: 0;
+        }
+        footer li:nth-child(1){
+            background: rgb(3,169,244);
+        }
+        footer li:nth-child(2){
+            background: rgb(90,190,188);
+        }
+        footer li:nth-child(3){
+            background: rgb(251,118,123);
+        }
+    </style>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title font-14"></h1>
+    </header>
+
+    <main id="main"></main>
+
+    <footer data-am-widget="navbar" class="am-navbar am-cf">
+        <ul class="am-navbar-nav am-cf am-avg-sm-4 am-padding-0 font-white" id="footer-ul"></ul>
+    </footer>
+
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../Dist/assets/js/toast.js"></script>
+    <script src="../../Dist/lib/PDFH5/pdf.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/pdf.worker.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../Dist/lib/PDFH5/pdfh5.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+
+        $(function () {
+            getPDF();
+        })
+
+        function getPDF() {
+            var Affairid = window.location.href.match(/Affairid=(\S*)&AffairCode/)[1];
+            var AffairCode = window.location.href.match(/AffairCode=(\S*)&AffairName/)[1];
+            var AffairName = decodeURI(window.location.href.match(/AffairName=(\S*)&IsNetAccepet/)[1]);
+            var IsNetAccepet = decodeURI(window.location.href.split('IsNetAccepet=')[1]);
+
+            $.ajax({
+                url: serverurl + '/gxfrTL/get_affair_guide',
+                data: {
+                    AffairId: Affairid,
+                    UserType: 2
+                },
+                success: function (res) {
+console.log(res)
+                    $('h1').html(AffairName);
+
+                    var html = '<li><a class="font-white" href="../work/work-table.html?id=' + Affairid + '&type=0">空表</a></li>' +
+                        '<li><a class="font-white" href="../work/work-table.html?id=' + Affairid + '&type=1">样表</a></li>' +
+                        '<li class="font-white" data-AffairCode="' + AffairCode + '" onclick="workOnline(this,' + Affairid + ',' + IsNetAccepet + ')">网上办事</li>';
+                    $('#footer-ul').html(html);
+
+                    new Pdfh5('#main', {
+                        pdfurl: res.Data[0].ACCESSORYPATH
+                    });
+                }
+            })
+        }
+ 
+        function workOnline(that, Affairid, IsNetAccepet) {
+			var user = JSON.parse(localStorage.getItem("user"));
+			
+            if (user) {
+				$.ajax({
+					url: serverurl + '/gxfrTL/CheckLoginState?log_verify_code='+user.log_verify_code,
+					success: function (res) {
+						console.log(res)
+						if(res.Result){
+							var AffairCode = that.getAttribute('data-AffairCode');
+				
+							if (IsNetAccepet == 3) {
+								window.location.href = '../work/work-apply.html?Affairid=' + Affairid + '&AffairCode=' + AffairCode + ''
+							} else {
+								toast('此事项暂不支持手机端办事')
+							}
+						}else{
+							toast('登录信息已失效，正在重新登录')
+							window.location.href = 'http://zszw.jsyizhengda.com/OAuth/Verificate';
+						}
+					}
+				})
+				
+            }else{
+				window.location.href = 'http://zszw.jsyizhengda.com/OAuth/Verificate';
+			}  
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit" />
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css" />
+
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title font-14"></h1>
+    </header>
+
+    <main>
+        <ul class="am-list am-margin-0" id="List"></ul>
+    </main>
+
+    <script type="text/html" id="Template">
+        <li data-name="[name]" data-doc="[doc]" data-pdf="[pdf]" class="am-g am-padding-sm flex align-center" onclick="getTableDetails(this)">
+            <div class="am-u-sm-2">
+                <img src="../../Dist/assets/img/pdf.png">
+            </div>
+            <div class="am-u-sm-9">
+                <p class="am-text-sm am-margin-0 ellipsis-2">[title]</p>
+                <i class="am-hide">[path]</i>
+                <div class="font-gray am-ellipsis am-text-xs">[remarks]</div>
+                <span class="am-text-sm font-gray">收[number]份</span>
+            </div>
+            <div class="am-u-sm-1">
+                <span class="am-icon-angle-right am-icon-sm"></span>
+            </div>
+        </li>
+    </script>
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../Dist/assets/js/toast.js"></script>
+    <script>
+        $(function () {
+            getList();
+        })
+
+        var id = window.location.href.match(/id=(\S*)&/)[1]; //
+        var type = window.location.href.split("type=")[1];
+
+        if (type == 0) {
+            $('h1').html('办事空表');
+        } else {
+            $('h1').html('办事样表');
+        }
+
+        function getList() {
+            $.ajax({
+                url: serverurl + '/gxfrTL/getMaterialsDetailsByAffairId',
+                data: {
+                    AffairId: id,
+                    UserType: 2
+                },
+                success: function (res) {
+                    var html = $("#Template").html();
+                    var remarks;
+                    $.each(res.Data, function (index, item) {
+                        if (item.REMARKS == null) {
+                            remarks = ''
+                        } else {
+                            remarks = '' + item.REMARKS + '';
+                        }
+
+                        var source = html.replace('[name]', item.MATNAME)
+                            .replace('[doc]', item.EMPTYTABLEPATH)
+                            .replace('[pdf]', item.EXAMPLEPATH)
+                            .replace('[path]', item.EXAMPLEPATH)
+                            .replace('[title]', item.MATNAME)
+                            .replace('[remarks]', remarks)
+                            .replace('[number]', item.MATNUMBER)
+                        $("#List").append(source);
+                    })
+                }
+            })
+        }
+
+        function getTableDetails(that) {
+            var doc = $(that).data('doc');
+            var pdf = $(that).data('pdf');
+            var name = $(that).data('name');
+            var src;
+
+            if (type == 0) {
+                if (doc == '') {
+                    toast('没有对应文件')
+                } else {
+                    src = $(that).data('doc');
+                    window.location.href = 'work-table-details.html?&type=0&src=' + src + '&name=' + name + ''
+                }
+            } else {
+                if (pdf == '') {
+                    toast('没有对应文件')
+                } else {
+                    src = $(that).data('pdf');
+                    window.location.href = 'work-table-details.html?&type=1&src=' + src + '&name=' + name + ''
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

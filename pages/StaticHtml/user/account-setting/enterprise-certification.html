@@ -1,0 +1,234 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../../Dist/assets/css/app.css">
+
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">企业实名认证</h1>
+    </header>
+
+    <main>
+        <h3 class="am-margin-0 am-padding-sm">企业统一社会信用代码</h3>
+        <div class="am-form">
+            <ul class="am-list am-margin-0">
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">企业名称</span>
+                    <span class="am-u-sm-8">
+                        <input type="text" id="CorpName" class="am-text-right am-form-field border-0" placeholder="请输入企业名称">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-6">企业统一社会信用代码</span>
+                    <span class="am-u-sm-6">
+                        <input type="text" id="CorpId" class="am-text-right am-form-field border-0" placeholder="请输入企业统一社会信用代码">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">类型</span>
+                    <span class="am-u-sm-8">
+                        <input type="text" id="CorpType" class="am-text-right am-form-field border-0" placeholder="请输入类型">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">住所</span>
+                    <span class="am-u-sm-8">
+                        <input type="text" id="CorpAddress" class="am-text-right am-form-field border-0" placeholder="请输入住所">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">法人代表</span>
+                    <span class="am-u-sm-8">
+                        <input type="text" id="FrzzName" class="am-form-field border-0 am-text-right" placeholder="请输入法人代表">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">成立日期</span>
+                    <span class="am-u-sm-8 flex align-center">
+                        <input type="text" id="FoundedDate" class="am-form-field border-0 am-text-right bg-none" placeholder="请输入成立日期"
+                               data-am-datepicker="{minViewMode:0}" readonly required />
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">营业期限</span>
+                    <span class="am-u-sm-8 flex align-center">
+                        <input type="text" id="BussinessTermFrom" class="am-form-field border-0 am-text-left bg-none" placeholder="请输入日期"
+                               data-am-datepicker="{minViewMode:0}" readonly required />
+                        至
+                        <input type="text" id="BussinessTermTo" class="am-form-field border-0 am-text-right bg-none" placeholder="请输入日期"
+                               data-am-datepicker="{minViewMode:0}" readonly required />
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">发证单位</span>
+                    <span class="am-u-sm-8">
+                        <input type="text" id="IssueOrg" class="am-form-field border-0 am-text-right" placeholder="请输入发证单位">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse am-padding-sm">
+                    <span class="am-u-sm-12">经营范围</span>
+                    <div class="am-u-sm-12 am-margin-top-sm">
+                        <textarea rows="5" id="BusinessScope" placeholder="请输入经营范围"></textarea>
+                    </div>
+                </li>
+                <li class="am-g am-g-collapse am-padding-sm">
+                    <span class="am-u-sm-12">营业执照</span>
+                    <div class="am-u-sm-6 am-u-end am-margin-top-sm">
+                        <label id="label" for="license">
+                            <img src="../../../Dist/assets/img/yingye.png" alt="">
+                        </label>
+                        <input type="file" onchange="upload(this)" id="license" class="am-hide" accept="image/*">
+                    </div>
+                </li>
+            </ul>
+            <div class="am-padding-sm am-text-center">
+                <button type="button" onclick="submit()" class="am-btn am-btn-primary am-round am-padding-horizontal-lg">提交</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="am-modal am-modal-loading am-modal-no-btn" id="loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">上传中</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../Scripts/globalconfigs.js"></script>
+    <script src="../../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../../Dist/assets/js/md5.js"></script>
+    <script src="../../../Dist/assets/js/toast.js"></script>
+    <script>
+        var ImageUrl3;
+        var user = JSON.parse(localStorage.getItem("user"));
+        var log_verify_code = user.log_verify_code;
+
+        function upload(that) {
+            var files = that.files;
+            var reader = new FileReader();
+
+            reader.readAsDataURL(files[0]);
+            reader.onload = function (e) {
+                $('#label').html('<img src="' + this.result + '">');
+
+                var File = this.result.split(",")[1];
+                var type = files[0].name.split('.')[1];
+
+                $.ajax({
+                    url: serverurl + '/gxfrTL/uploadFile',
+                    type: 'POST',
+                    data: {
+                        GuId: '89a627f1-c998-4002-a885-6e5c9daafaa7',
+                        type: type,
+                        File: File,
+                        Ftype: 2,
+                        log_verify_code: log_verify_code
+                    },
+                    beforeSend: function () {
+                        $('#loading').modal();
+                    },
+                    success: function (res) {
+                        ImageUrl3 = serverurl + res.data;
+                    },
+                    complete: function () {
+                        $('#loading').modal();
+                    }
+                })
+            }
+        }
+
+        function submit() {
+            var CorpName = $('#CorpName').val().replace(/\s+/g, "");
+            var CorpId = $('#CorpId').val().replace(/\s+/g, "");
+            var CorpType = $('#CorpType').val().replace(/\s+/g, "");
+            var CorpAddress = $('#CorpAddress').val().replace(/\s+/g, "");
+            var FrzzName = $('#FrzzName').val().replace(/\s+/g, "");
+            var FoundedDate = $('#FoundedDate').val().replace(/\s+/g, "");
+            var BussinessTermFrom = $('#BussinessTermFrom').val().replace(/\s+/g, "");
+            var BussinessTermTo = $('#BussinessTermTo').val().replace(/\s+/g, "");
+            var IssueOrg = $('#IssueOrg').val().replace(/\s+/g, "");
+            var BusinessScope = $('#BusinessScope').val();
+
+            if (CorpName == '') {
+                toast('请输入企业名称')
+            } else if (CorpId == '') {
+                toast('请输入企业统一社会信用代码')
+            } else if (CorpType == '') {
+                toast('请输入类型')
+            } else if (CorpAddress == '') {
+                toast('请输入住所')
+            } else if (FrzzName == '') {
+                toast('请输入法人代表')
+            } else if (FoundedDate == '') {
+                toast('请输入成立日期')
+            } else if (BussinessTermFrom == '') {
+                toast('请输入营业期限')
+            } else if (BussinessTermTo == '') {
+                toast('请输入营业期限')
+            } else if (IssueOrg == '') {
+                toast('请输入发证单位')
+            } else if (BusinessScope == '') {
+                toast('请输入经营范围')
+            } else if (ImageUrl3 == undefined) {
+                toast('请上传营业执照')
+            } else {
+                $.ajax({
+                    url: serverurl + '/gxfrTL/enterpriseAuthentication',
+                    type: 'POST',
+                    beforeSend: function () {
+                        $('#loading').modal();
+                    },
+                    data: {
+                        CorpName: CorpName,
+                        CorpId: CorpId,
+                        CorpType: CorpType,
+                        CorpAddress: CorpAddress,
+                        FrzzName: FrzzName,
+                        FoundedDate: FoundedDate,
+                        BussinessTermFrom: BussinessTermFrom,
+                        BussinessTermTo: BussinessTermTo,
+                        IssueOrg: IssueOrg,
+                        BusinessScope: BusinessScope,
+                        ImageUrl3: ImageUrl3,
+                        UserType: 2,
+                        log_verify_code: log_verify_code,
+                    },
+                    success: function (res) {
+                        
+                        toast('提交成功');
+                        setTimeout(function () {
+                            window.location.href = "account-setting.html";
+                        }, 1000);
+
+                    },
+                    complete: function () {
+                        $('#loading').modal();
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>

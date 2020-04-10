@@ -1,0 +1,722 @@
+﻿<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--自动适应移动屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--优先使用webkit内核渲染-->
+    <meta name="renderer" content="webkit">
+    <!--不要被百度转码-->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>易政达掌上政务</title>
+    <link rel="stylesheet" href="../../Dist/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../../Dist/assets/css/app.css">
+    <style>
+        .am-popup-ft {
+            position: absolute;
+            bottom: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 43px;
+            border-top: 1px solid #dedede;
+            background-color: #fff;
+        }
+
+        .am-popup-ft button {
+            height: 43px;
+        }
+
+        .am-popup-bd {
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header-fixed am-header am-g am-text-center am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a onclick="window.history.back()">
+                <i class="am-header-icon am-icon-angle-left"></i>
+            </a>
+        </div>
+        <h1 class="am-header-title">申请办理</h1>
+    </header>
+
+    <main>
+        <div class="am-modal-actions" id="personal-document-actions">
+            <div class="am-modal-actions-group">
+                <ul class="am-list">
+                    <li data-index="1" class="am-modal-actions-header">身份证</li>
+                    <li data-index="2" class="am-modal-actions-header">护照</li>
+                    <li data-index="3" class="am-modal-actions-header">居住证</li>
+                    <li data-index="4" class="am-modal-actions-header">军官证</li>
+                    <li data-index="5" class="am-modal-actions-header">出生证</li>
+                    <li data-index="6" class="am-modal-actions-header">绿卡</li>
+                    <li data-index="7" class="am-modal-actions-header">港澳通行证</li>
+                    <li data-index="8" class="am-modal-actions-header">其他证件</li>
+                    <li data-index="9" class="am-modal-actions-header">社保卡</li>
+                    <li data-index="11" class="am-modal-actions-header">学籍号</li>
+                </ul>
+            </div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+            </div>
+        </div>
+
+        <div class="am-modal-actions" id="personal-gender-actions">
+            <div class="am-modal-actions-group">
+                <ul class="am-list">
+                    <li class="am-modal-actions-header">男</li>
+                    <li class="am-modal-actions-header">女</li>
+                </ul>
+            </div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+            </div>
+        </div>
+
+        <div class="am-modal-actions" id="enterprise-card-actions">
+            <div class="am-modal-actions-group">
+                <ul class="am-list">
+                    <li data-index="12" class="am-modal-actions-header">组织机构代码证</li>
+                    <li data-index="13" class="am-modal-actions-header">营业执照</li>
+                    <li data-index="14" class="am-modal-actions-header">事业单位登记证书</li>
+                    <li data-index="15" class="am-modal-actions-header">社团登记证书</li>
+                    <li data-index="16" class="am-modal-actions-header">民办非企业单位登记证书</li>
+                    <li data-index="17" class="am-modal-actions-header">工会法人登记证书</li>
+                    <li data-index="18" class="am-modal-actions-header">统一社会信用代码</li>
+                    <li data-index="19" class="am-modal-actions-header">税务登记证</li>
+                    <li data-index="20" class="am-modal-actions-header">其他证件</li>
+                    <li data-index="21" class="am-modal-actions-header">单位社保编号</li>
+                </ul>
+            </div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+            </div>
+        </div>
+
+        <div class="am-popup" id="file-upload-popup">
+            <div class="am-popup-inner" style="padding-bottom:44px">
+                <div class="am-popup-hd">
+                    <h4 class="am-popup-title">材料上传</h4>
+                    <span  class="am-close" onclick="closeModal()">&times;</span>
+                </div>
+                <div class="am-popup-bd">
+                    <div class="flex">
+                        <span class="am-text-sm font-gray nowrap">材料名称：</span>
+                        <b id="file-name" class="file-name"></b>
+                    </div>
+                    <ul class="am-margin-0 am-padding-0 am-nbfc am-margin-vertical-sm" id="file-upload-ul">
+                        <div class="am-margin-top-sm">
+                            <label for="file-upload-input">
+                                <img class="am-u-sm-3 am-radius am-padding-0" src="../../Dist/assets/img/plus.png">
+                            </label>
+                            <input class="am-hide" type="file" name="file" id="file-upload-input" accept="image/*">
+                        </div>
+                    </ul>
+                </div>
+                <div class="am-popup-ft">
+                    <button type="button" onclick="next()" id="saveFile"
+                        class="am-btn am-btn-secondary am-btn-block">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="am-modal am-modal-loading am-modal-no-btn" id="uploadFile-loading">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">上传中</div>
+                <div class="am-modal-bd">
+                    <span class="am-icon-spinner am-icon-spin"></span>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <h3 class="am-margin-0 am-padding-sm bg-eee am-text-center font-14">基本信息</h3>
+            <div class="am-g">
+                <div class="am-u-sm-3 am-u-sm-offset-3">
+                    <div class="am-radio">
+                        <label>
+                            <input type="radio" onchange="radioChange()" name="doc-radio-1" value="personal"
+                                checked="true">个人
+                        </label>
+                    </div>
+                </div>
+                <div class="am-u-sm-3 am-u-end">
+                    <div class="am-radio">
+                        <label>
+                            <input type="radio" onchange="radioChange()" name="doc-radio-1" value="enterprise">企业
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="am-list am-margin-0 work-online-ul" id="personal-ul">
+                <li class="am-g am-g-collapse am-padding-sm flex align-center">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 证件类型</span>
+                    <a class="am-u-sm-8 am-text-right am-btn am-padding-0"
+                        data-am-modal="{target: '#personal-document-actions'}">
+                        <span class="am-text-sm font-gray" id="personal-documentType">请输入证件类型</span>
+                        <span class="am-icon-angle-right"></span>
+                    </a>
+                </li>
+                <li class="am-g am-g-collapse am-padding-sm flex align-center">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 证件号码</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-documentNumber" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入您的证件号码">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 姓名</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-name" type="text" class="am-form-field am-text-right border-0"
+                            placeholder="请输入姓名">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-horizontal-sm am-padding-vertical-xs">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 性别</span>
+                    <a class="am-u-sm-8 am-text-right am-btn padding-0"
+                        data-am-modal="{target: '#personal-gender-actions'}">
+                        <span class="am-text-sm font-gray" id="genderText">请选择性别</span>
+                        <span class="am-icon-angle-right"></span>
+                    </a>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 出生日期</span>
+                    <span class="am-u-sm-8 flex align-center">
+                        <input id="personal-birthDate" type="text" class="am-form-field am-text-right border-0 bg-none"
+                            placeholder="请选择出生日期" data-am-datepicker="{minViewMode:0}" readonly required />
+                        <span class="am-icon-angle-right"></span>
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 移动电话</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-mobilePhone" type="number" class="am-text-right am-form-field border-0"
+                            placeholder="请输入移动电话号码">
+                    </span>
+                </li>
+                <!--<li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">&nbsp;&nbsp;固定电话</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-fixedPhone" type="number" class="am-text-right am-form-field border-0"
+                            placeholder="请输入固定电话号码">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">&nbsp;&nbsp;户籍地址</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-liveAddress" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入户籍地址">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4">&nbsp;&nbsp;居住地址</span>
+                    <span class="am-u-sm-8">
+                        <input id="personal-residenceAddress" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入居住地址">
+                    </span>
+                </li>-->
+            </ul>
+
+            <ul class="am-list am-margin-0 work-online-ul" id="enterprise-ul">
+                <li class="am-g am-g-collapse flex align-center am-padding-horizontal-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 证件类型</span>
+                    <a class="am-u-sm-8 am-text-right am-btn padding-0"
+                        data-am-modal="{target: '#enterprise-card-actions'}">
+                        <span class="am-text-sm font-gray" id="enterprise-documentType">请输入证件类型</span>
+                        <span class="am-icon-angle-right"></span>
+                    </a>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 证件号码</span>
+                    <span class="am-u-sm-8">
+                        <input id="enterprise-documentNumber" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入您的证件号码">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 单位名称</span>
+                    <span class="am-u-sm-8">
+                        <input id="enterprise-name" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入单位名称">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 联系方式</span>
+                    <span class="am-u-sm-8">
+                        <input id="enterprise-phone" type="number" class="am-text-right am-form-field border-0"
+                            placeholder="请输入联系方式">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 注册地址</span>
+                    <span class="am-u-sm-8">
+                        <input id="enterprise-registerAddress" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入注册地址">
+                    </span>
+                </li>
+                <li class="am-g am-g-collapse flex align-center am-padding-sm">
+                    <span class="am-u-sm-4"><b class="font-red">*</b> 办公地址</span>
+                    <span class="am-u-sm-8">
+                        <input id="enterprise-officeAddress" type="text" class="am-text-right am-form-field border-0"
+                            placeholder="请输入办公地址">
+                    </span>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="am-margin-0 am-padding-sm bg-eee am-text-center font-14">材料信息</h3>
+            <ul class="am-list am-margin-0 work-file-ul"></ul>
+        </section>
+    </main>
+
+    <footer data-am-widget="navbar" class="am-navbar am-cf am-text-center bg-green font-white" onclick="submit()">提交
+    </footer>
+
+    <script type="text/html" id="FileTemplate">
+        <li data-id="[id]" data-required="[required]" data-name="[name]" onclick="showFileUploadPopup(this,[index])" class="upload-li am-g am-padding-sm flex align-center [className]">
+            [sign]
+            <div class="am-u-sm-2">
+                <img src="../../Dist/assets/img/pdf.png">
+            </div>
+            <div class="am-u-sm-8">
+                <p class="am-margin-0 am-text-sm am-ellipsis">[title]</p>
+                <span class="am-text-xs font-red">[requiredText]</span>
+                <div class="font-gray am-ellipsis am-text-xs">[remarks]</div>
+            </div>
+            <div class="am-u-sm-2 am-text-right">
+                <span class="am-icon-cloud-upload am-icon-sm font-green"></span>
+            </div>
+        </li>
+    </script>
+
+    <script type="text/html" id="ImgTemplate">
+        <li class="am-nbfc am-padding-vertical-sm border-bottom-dedede flex align-center justify-between">
+            <img class="am-u-sm-3 am-padding-0 am-radius" src="[src]">
+            <span class="am-icon-cloud-upload am-icon-lg font-green" data-imgType="[type]" data-imgbase="[base]"
+                onclick="uploadFile(this)"></span>
+        </li>
+    </script>
+    <script src="../../Scripts/globalconfigs.js"></script>
+    <script src="../../Dist/assets/js/jquery-3.4.1.js"></script>
+    <script src="../../Dist/assets/js/amazeui.min.js"></script>
+    <script src="../../Dist/assets/js/json2.js"></script>
+    <script src="../../Dist/assets/js/toast.js"></script>
+
+    <script>
+        $(function () {
+            radioChange();
+            getWorkFile();
+         })
+
+        var AffairId = window.location.href.match(/AffairId=(\S*)&Objindex/)[1];
+        var Objindex = window.location.href.match(/Objindex=(\S*)&AffairCode/)[1];
+        var AffairCode = window.location.href.match(/AffairCode=(\S*)&ObjectId/)[1];
+        var ObjectId = window.location.href.split("ObjectId=")[1];
+
+        var isUploadFile = false; //判断单个材料是否上传
+        var requiredIndex; //已上传图片标签的索引值，用于添加对号样式
+        var isImgUrl = '';//上传后返回的图片地址
+        var SavePath = []; //存储上传后返回的图片地址
+        var MaterialTakeInfoList = []; //创建提交时的数组
+
+        //获取材料信息
+        function getWorkFile() {
+            $.ajax({
+                url: serverurl + '/gxfrTL/getMaterialsDetailsByAffairId',
+                data: {
+                    AffairId: AffairId,
+                    UserType: 2
+                },
+                success: function (res) {
+                    console.log('Data:',res.Data)
+
+                    var newArr = res.Data.filter(item => {
+                        if(item.MATINDEX!=null){
+                            return item => item.MATINDEX.includes(Objindex)
+                        }
+                    });
+
+                    var html = $("#FileTemplate").html();
+                    var source = '';
+                    var sign = '';//材料类型标志
+                    var remarks = '';//材料备注
+                    var className = '';//必须上传的类名
+                    var requiredText = ''//必须上传提示;
+
+                    $.each(newArr, function (index, item) {
+                        item.remarks==null?item.remarks='':item.remarks=item.remarks;
+                        console.log('必须上传:',item.REQUIRED)
+                        if(item.REQUIRED=='是'){
+                            className = 'required';
+                            requiredText = '必须上传'
+                        }else{
+                            className = '';
+                            requiredText = '';
+                        }
+
+                        if(item.MATGROUP==0){
+                            sign = '<span class="am-icon am-icon-info-circle font-red am-text-lg"></span>';
+                        }else if(item.MATGROUP==1){
+                            sign = '<span class="am-icon am-icon-info-circle font-yellow am-text-lg"></span>';
+                        }else if(item.MATGROUP==2){
+                            sign = '<span class="am-icon am-icon-info-circle font-green am-text-lg"></span>';
+                        }
+                        
+                        source += html.replace('[id]', item.ID)
+                                        .replace('[className]', className)
+                                        .replace('[required]', item.REQUIRED)
+                                        .replace('[name]', item.MATNAME)
+                                        .replace('[index]', index)
+                                        .replace('[sign]', sign)
+                                        .replace('[title]', item.MATNAME)
+                                        .replace('[remarks]', remarks)
+                                        .replace('[requiredText]', requiredText)
+                    });
+                    
+                    $(".work-file-ul").html(source);
+                 }
+            })
+        }
+
+        //选择个人或企业的单选框改变事件
+        function radioChange() {
+            var checked = $('input:radio[name="doc-radio-1"]:checked').val()
+            if (checked == 'personal') {
+                $('#enterprise-ul').hide();
+                $('#personal-ul').show();
+            } else {
+                $('#enterprise-ul').show();
+                $('#personal-ul').hide();
+            }
+        }
+        
+        //弹出上传图片界面
+        function showFileUploadPopup(_this, index) {
+            var that = _this;
+            var id = $(that).data('id');
+            var name = $(that).data('name');
+
+            $('#file-name').html(name)
+            $('#saveFile').attr('data-id', id);
+            $('#file-upload-popup').modal();
+
+            requiredIndex = index;
+        }
+        
+        //选择材料图片上传
+        $('#file-upload-input').on('change', function () {
+            var fileList = this.files; //获取选中的图片数组
+
+            //对图片进行遍历
+            for (var i = 0; i < fileList.length; i++) {
+                var reader = new FileReader();
+                reader.readAsDataURL(fileList[i]);
+                var imgType = fileList[i].name.split('.')[1]; //获取图片格式
+
+                // 当文件读取成功时执行的函数
+                reader.onload = function (e) {
+                    var html = $("#ImgTemplate").html();
+                    var source = html.replace('[src]', this.result)
+                        .replace('[type]', imgType)
+                        .replace('[base]', this.result)
+
+                    $('#file-upload-ul').prepend(source);
+                    $('#file-upload-ul li img').height($('#file-upload-ul li img').width());
+                }
+            }
+        })
+
+        //上传材料图片
+        function uploadFile(that) {
+            var imgType = that.getAttribute('data-imgType'); //获取图片类型
+            var imgBase = that.getAttribute('data-imgBase'); //获取图片base64编码
+            isImgUrl = imgBase.split(",")[1]; //截取图片base64编码
+
+            $.ajax({
+                url: serverurl + '/gxfrTL/uploadFileByBase64',
+                type: 'POST',
+                cache: false,
+                beforeSend: function () {
+                    $('#uploadFile-loading').modal();
+                },
+                data: {
+                    Type: imgType,
+                    File: isImgUrl,
+                    UserType: 2
+                },
+                dataType: "json",
+                success: function (res) {
+                    SavePath.push(res.Data); //存储每次上传返回的图片地址
+                    that.setAttribute('class', 'am-icon-check-square am-icon-lg font-green'); //上传成功后设置成功的样式
+                    that.onclick = null; //上传成功后禁止点击事件
+                    isUploadFile = true;
+                },
+                error: function (err) {
+                    toast('上传失败！图片格式不对！')
+                },
+                complete: function () {
+                    $('#uploadFile-loading').modal();
+                }
+            })
+        }
+
+        //保存上传的材料图片
+        function next() {
+            if (isImgUrl == '') {
+                toast('请上传图片')
+            } else {
+                var MatID = $('#saveFile').attr('data-id'); //获取当前材料的ID
+                var MaterialName = $('#file-name').html(); //获取当前材料的名称
+
+                //遍历数组里已经上传过的材料，删除，并在下一步添加进去
+                MaterialTakeInfoList.forEach((item,index)=>{
+                    if(item.MatID==MatID){
+                        MaterialTakeInfoList.splice(index, 1); 
+                        console.log('true');
+                    }
+                });
+
+                //向数组里添加上传的材料
+                MaterialTakeInfoList.push({
+                    Copies: 1,
+                    MatID: MatID,
+                    MaterialName: MaterialName,
+                    MaterialType: 5,
+                    ReMark: "",
+                    SavePath: SavePath.join(','),
+                    id: MatID,
+                    localPath: ""
+                });
+
+                console.log(MaterialTakeInfoList)
+
+                if (isUploadFile) { //判断是否已上传文件
+                    $('.work-file-ul li').eq(requiredIndex).addClass('isRequired'); //添加Class，表明状态为已上传，用于提交时判断
+                    $('.work-file-ul li').eq(requiredIndex).find('span.am-icon-cloud-upload').attr('class','am-icon-check-square am-icon-sm font-green'); //设置已上传状态的样式
+                    isUploadFile = false;//关闭已上传控制器
+                    SavePath = [];//把保存图片地址的数组清空
+                }
+                $('#file-upload-ul li').remove(); //清空选择的图片
+                $('#file-upload-popup').modal(); //关闭弹窗
+            }
+        }
+
+        function closeModal() {
+            isImgUrl = '';
+            $('#file-upload-popup').modal();
+            $('#file-upload-ul li').remove();
+        }
+
+        //提交申请
+        function submit() {
+            var checked = $('input:radio[name="doc-radio-1"]:checked').val();
+            var isBasic = true;
+            var AffairInfo = {};
+            var user = JSON.parse(localStorage.getItem("user"));//获取存储的用户信息
+            var userId = user.userId;//获取存储的用户信息
+            
+            //生成上传时间
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+
+            //在1~9的数字前补零
+            month < 10?month = '0' + month:'';
+            day < 10?day = '0' + day:'';
+            hour < 10?hour = '0' + hour:'';
+            minute < 10?minute = '0' + minute:'';
+            second < 10?second = '0' + second:'';
+
+            var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;//上传时间
+            var timestamp = new Date().getTime();//上传时间戳
+
+            // 正则表达式：
+            var idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            var phoneReg = /^1[3456789]\d{9}$/;
+
+            if (checked == 'personal') {
+                var documentType = $('#personal-documentType').attr('data-index');
+                var documentNumber = $('#personal-documentNumber').val();
+                var name = $('#personal-name').val();
+                var genderText = $('#genderText').attr('data-index');
+                var birthDate = $('#personal-birthDate').val();
+                var mobilePhone = $('#personal-mobilePhone').val();
+                var fixedPhone = $('#personal-fixedPhone').val();
+                var liveAddress = $('#personal-liveAddress').val();
+                var residenceAddress = $('#personal-residenceAddress').val();
+                 
+                if (documentType == undefined) {
+                    toast('请选择证件类型');
+                    return false;
+                }
+                if (documentNumber.trim() == '') {
+                    toast('请输入证件号码');
+                    return false;
+                }
+                if (documentType == 1) {
+                    if (!idcardReg.test(documentNumber.trim())) {
+                        toast('身份证格式不对');
+                        return false;
+                    }
+                }
+                if (name.trim() == '') {
+                    toast('请输入姓名');
+                    return false;
+                }
+                if (genderText == undefined) {
+                    toast('请选择性别');
+                    return false;
+                }
+                if (birthDate == '') {
+                    toast('请选择出生日期');
+                    return false;
+                }
+                if (mobilePhone.trim() == '') {
+                    toast('请输入手机号');
+                    return false;
+                }
+                if (!phoneReg.test(mobilePhone.trim())) {
+                    toast('请输入正确的手机号');
+                    return false;
+                }
+
+                isBasic = true;
+                AffairInfo = {
+                    AcceptPersonBirthday: birthDate,
+                    AcceptPersonMoblePhone: mobilePhone,
+                    AcceptPersonName: name,
+                    AcceptPersonPhone: fixedPhone,
+                    AcceptPersonSex: genderText,
+                    AffairCode: AffairCode,
+                    AffairId: AffairId,
+                    CurrAffairCode: AffairCode + '-' + year + month + day + timestamp,
+                    DocmentNumber: documentNumber,
+                    DocmentType: documentType,
+                    Handle_Type: 1,
+                    Is_LegalPerson: 0,
+                    LiveAddress: liveAddress,
+                    ObjectId: ObjectId,
+                    ResidenceAddress: residenceAddress,
+                    TownCode: 0,
+                    TransTime: time,
+                    UserId: userId
+                }
+
+            } else {
+                var documentType = $('#enterprise-documentType').attr('data-index');
+                var documentNumber = $('#enterprise-documentNumber').val();
+                var name = $('#enterprise-name').val();
+                var phone = $('#enterprise-phone').val();
+                var registerAddress = $('#enterprise-registerAddress').val();
+                var officeAddress = $('#enterprise-officeAddress').val();
+
+                if (documentType == '') {
+                    toast('请选择证件类型');
+                    return false;
+                }
+                if (documentNumber.trim() == '') {
+                    toast('请输入正确的证件号码');
+                    return false;
+                }
+                if (name.trim() == '') {
+                    toast('请输入公司名称');
+                    return false;
+                }
+                if (phone.trim()     == '') {
+                    toast('请输入联系方式');
+                    return false;
+                }
+                if (registerAddress.trim() == '') {
+                    toast('请输入注册地址');
+                    return false;
+                }
+                if (officeAddress.trim() == '') {
+                    toast('请输入办公地址');
+                    return false;
+                }
+
+                isBasic = true;
+                AffairInfo = {
+                    AcceptPersonName: name,
+                    AcceptPersonPhone: phone,
+                    AcceptPersonSex: 0,
+                    AffairCode: AffairCode,
+                    AffairId: AffairId,
+                    CurrAffairCode: AffairCode + '-' + year + month + day + timestamp,
+                    DocmentNumber: documentNumber,
+                    DocmentType: documentType,
+                    Handle_Type: 1,
+                    Is_LegalPerson: 1,
+                    LiveAddress: registerAddress,
+                    ObjectId: ObjectId,
+                    ResidenceAddress: officeAddress,
+                    TownCode: 0,
+                    TransTime: time,
+                    UserId: userId
+                }
+            }
+
+            if (isBasic) {
+                var rLi = $('.work-file-ul li.required').length;
+                var isrLi = $('.work-file-ul li.isRequired').length;
+                console.log('已上传:',isrLi,'需上传:',rLi,)
+
+                if(isrLi<rLi){
+                    toast('请补齐必须上传的材料');
+                }else{
+                    var allInfo = JSON.stringify({  
+                        AffairInfo,
+                        MaterialTakeInfoList
+                    })
+                    $.ajax({
+                        url: serverurl + '/gxfrTL/affairAcceptNew',
+                        type: 'POST',
+                        cache: false,
+                        data: allInfo,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            alert('提交成功');
+                            setTimeout(function () {
+                                location.replace('../work/work.html');
+                            }, 1000)
+                        }
+                    })
+                }
+            }
+        }
+
+        $('#personal-document-actions ul li').on('click', function () {
+            var index = $(this).index() + 1;
+            var text = $(this).text();
+            $("#personal-documentType").attr("data-index", index).text(text);
+            $('#personal-document-actions').modal();
+        })
+
+        $('#personal-gender-actions ul li').on('click', function () {
+            var index = $(this).index() + 1;
+            var text = $(this).text();
+            $("#genderText").attr("data-index", index).text(text);
+            $('#personal-gender-actions').modal();
+        })
+
+        $('#enterprise-card-actions ul li').on('click', function () {
+            var index = $(this).index() + 1;
+            var text = $(this).text();
+            $('#enterprise-documentType').attr("data-index", index).text(text);
+            $('#enterprise-card-actions').modal();
+        })
+    </script>
+</body>
+
+</html>
