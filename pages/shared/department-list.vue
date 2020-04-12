@@ -2,7 +2,7 @@
 	<view class="warp">
 		<cu-custom bgColor="bg-blue" :isBack="true"><block slot="content">办事部门</block></cu-custom>
 		<uni-list v-for="(item, index) in departmentlist" :index="index" :key="index">
-		    <uni-list-item :title="item.AffairName" :show-extra-icon="true" :extra-icon="extraIcon1" ></uni-list-item>
+		    <uni-list-item :title="item.AffairName" :show-extra-icon="true" :extra-icon="extraIcon1" @click="departOnClick(item)" ></uni-list-item>
 		</uni-list>
 		
 	</view>
@@ -17,14 +17,14 @@
 	export default {
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
 			console.log(option); //打印出上个页面传递的参数。
-			if(option.id != undefined){
+			if(option && option.id != undefined){
 				this.departId = option.id
 				this.getDepartmentList(this.departId)
 			}
-			if(option.name != undefined){
+			if(option && option.name != undefined){
 				this.name = option.name
 			}
-			if(option.level != undefined){
+			if(option && option.level != undefined){
 				this.level = option.level
 				this.getLevelList(this.departId)
 			}
@@ -82,7 +82,17 @@
 						this.departmentlist = wlist
 					}
 				})
-			}
+			},
+			departOnClick(item){
+				// console.log(item)
+				uni.navigateTo({
+				    url: '../shared/pdf?Affairid=' + item.Affairid 
+						+ '&AffairCode=' + item.AffairCode 
+						+ '&AffairName=' + item.AffairName 
+						+ '&IsNetAccepet=' + item.IsNetAccepet 
+						
+				});
+			},
 			
 		},
 	}

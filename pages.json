@@ -23,7 +23,11 @@
 		},
 		{
 			"path": "pages/shared/department-list"
+		},
+		{
+			"path": "pages/shared/pdf"
 		}
+		
 	],
 	"globalStyle": {
 		"mp-alipay": {

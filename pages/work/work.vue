@@ -27,7 +27,7 @@
 		
 		<view class="h3">热门办理事项</view>
 		<uni-list v-for="(item, index) in hotlist" :index="index" :key="index">
-		    <uni-list-item :title="item.AffairName" :show-arrow="false" @click="hotchange(index)"></uni-list-item>
+		    <uni-list-item :title="item.AffairName" :show-arrow="false" @click="hotchange(item)"></uni-list-item>
 		</uni-list>
 		
 	</view>
@@ -119,8 +119,15 @@
 					}
 				})
 			},
-			hotchange(index){
-				console.log(index)
+			hotchange(item){
+				console.log(item)
+				uni.navigateTo({
+				    url: '../shared/pdf?Affairid=' + item.Affairid 
+						+ '&AffairCode=' + item.AffairCode 
+						+ '&AffairName=' + item.AffairName 
+						+ '&IsNetAccepet=' + item.IsNetAccepet 
+						
+				});
 			}
 		}
 	}
@@ -256,5 +263,9 @@
 
 	.swiper {
 		height: 420px;
+	}
+	
+	.h3 {
+		font-size: 46rpx;
 	}
 </style>
