@@ -1,9 +1,28 @@
 <template>
-	<view class="warp">
-		<cu-custom bgColor="bg-blue" :isBack="true"><block slot="content">办事部门</block></cu-custom>
-		<uni-list v-for="(item, index) in departmentlist" :index="index" :key="index">
-		    <uni-list-item :title="item.AffairName" :show-extra-icon="true" :extra-icon="extraIcon1" @click="departOnClick(item)" ></uni-list-item>
-		</uni-list>
+	<view>
+		<!-- <cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">办事部门</block></cu-custom> -->
+		<view class="box">
+			<view class="cu-bar bg-gradual-blue">
+				<view class="action" @click="pageBack()">
+					<text class="cuIcon-back text-gray"></text> 返回
+				</view>
+				<view class="content text-bold">
+					办事部门
+				</view>
+				<view class="action">
+					<text>请选择部门</text>
+					<text class="cuIcon-triangledownfill"></text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="cu-list menu">
+			<view class="cu-item" v-for="(item, index) in departmentlist" :index="index" :key="index">
+				<view class="content" @click="departOnClick(item)">
+					<text class="text-grey">{{item.AffairName}}</text>
+				</view>
+			</view>
+		</view>
 		
 	</view>
 </template>
@@ -93,7 +112,9 @@
 						
 				});
 			},
-			
+			pageBack(){
+				uni.navigateBack()
+			}
 		},
 	}
 	

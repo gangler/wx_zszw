@@ -1,55 +1,54 @@
 <template>
-	<view class="warp">
-		<cu-custom bgColor="bg-blue" :isBack="false"><block slot="content">网上办事</block></cu-custom>
-		<view class="h3">办事部门</view>
-		<view class="example-body">
-			<uni-grid :column="4" :highlight="true">
-				<uni-grid-item v-for="(item, index) in worklist" :index="index" :key="index">
-					<view class="grid-item-box" @click="workchange(item.ID)">
-						<image :src="item.SAVPATH" class="image" mode="aspectFill" />
-						<text class="text">{{ item.CNAME }}</text>
-					</view>
-				</uni-grid-item>
-			</uni-grid>
+	<view>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">网上办事</block></cu-custom>
+		<view class="cu-bar bg-white solid-bottom margin-top">
+			<view class="action">
+				<text class="h3">办事部门</text> 
+			</view>
+		</view>
+		<view class="cu-list grid col-4" >
+			<view class="cu-item" v-for="(item, index) in worklist" :index="index" :key="index">
+				<view @click="workchange(item.ID)">
+					<image :src="item.SAVPATH" class="image dept-img" mode="aspectFill" />
+					<text class="text">{{ item.CNAME }}</text>
+				</view>
+			</view>
 		</view>
 		
-		<view class="h3">事项层级列表</view>
-		<view class="example-body">
-			<uni-grid :column="4" :highlight="true">
-				<uni-grid-item v-for="(item, index) in levellist" :index="index" :key="index">
-					<view class="grid-item-box" @click="levelchange(item.AffairLevelTypeName, item.AffairLevelTypeCode)">
-						<!-- <image :src="item.SAVPATH" class="image" mode="aspectFill" /> -->
-						<text class="text">{{ item.AffairLevelTypeName }}</text>
-					</view>
-				</uni-grid-item>
-			</uni-grid>
+		<view class="cu-bar bg-white solid-bottom margin-top">
+			<view class="action">
+				<text class="h3">事项层级列表</text> 
+			</view>
+		</view>
+		<view class="cu-list grid col-4" >
+			<view class="cu-item" v-for="(item, index) in levellist" :index="index" :key="index">
+				<view @click="levelchange(item.AffairLevelTypeName, item.AffairLevelTypeCode)">
+					<text class="text">{{ item.AffairLevelTypeName }}</text>
+				</view>
+			</view>
 		</view>
 		
-		<view class="h3">热门办理事项</view>
-		<uni-list v-for="(item, index) in hotlist" :index="index" :key="index">
-		    <uni-list-item :title="item.AffairName" :show-arrow="false" @click="hotchange(item)"></uni-list-item>
-		</uni-list>
+		<view class="cu-bar bg-white solid-bottom margin-top">
+			<view class="action">
+				<text class="h3">热门办理事项</text> 
+			</view>
+		</view>
+		<view class="cu-list menu">
+			<view class="cu-item" v-for="(item, index) in hotlist" :index="index" :key="index">
+				<view class="content" @click="hotchange(item)">
+					<text class="text-grey">{{item.AffairName}}</text>
+				</view>
+			</view>
+		</view>
 		
 	</view>
 </template>
 
 <script>
-	import uniSection from '@/components/uni-section/uni-section.vue'
-	import uniGrid from '@/components/uni-grid/uni-grid.vue'
-	import uniGridItem from '@/components/uni-grid-item/uni-grid-item.vue'
-	import uniBadge from '@/components/uni-badge/uni-badge.vue'
-	import uniList from "@/components/uni-list/uni-list.vue"
-	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import serverurl from "@/common/globalconfigs.js"
 	
 	export default {
 		components: {
-			uniSection,
-			uniGrid,
-			uniGridItem,
-			uniBadge,
-			uniList,
-			uniListItem
 		},
 		data() {
 			return {
@@ -136,136 +135,12 @@
 </script>
 
 <style>
-	/* #ifndef APP-NVUE */
-	page {
-		display: flex;
-		flex-direction: column;
-		box-sizing: border-box;
-		background-color: #efeff4;
-		min-height: 100%;
-		height: auto;
-	}
-
-	view {
-		font-size: 14px;
-		line-height: inherit;
-	}
-
-	.example {
-		padding: 0 15px 15px;
-	}
-
-	.example-info {
-		padding: 15px;
-		color: #3b4144;
-		background: #ffffff;
-	}
-
-	.example-body {
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: center;
-		padding: 0;
-		font-size: 14px;
-		background-color: #ffffff;
-	}
-
-	/* #endif */
-	.example {
-		padding: 0 15px;
-	}
-
-	.example-info {
-		/* #ifndef APP-NVUE */
-		display: block;
-		/* #endif */
-		padding: 15px;
-		color: #3b4144;
-		background-color: #ffffff;
-		font-size: 14px;
-		line-height: 20px;
-	}
-
-	.example-info-text {
-		font-size: 14px;
-		line-height: 20px;
-		color: #3b4144;
-	}
-
-
-	.example-body {
-		flex-direction: column;
-		padding: 15px;
-		background-color: #ffffff;
-	}
-
-	.word-btn-white {
-		font-size: 18px;
-		color: #FFFFFF;
-	}
-
-	.word-btn {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		border-radius: 6px;
-		height: 48px;
-		margin: 15px;
-		background-color: #007AFF;
-	}
-
-	.word-btn--hover {
-		background-color: #4ca2ff;
-	}
-
-
-	.image {
-		width: 50rpx;
-		height: 50rpx;
-	}
-
-	.text {
-		font-size: 26rpx;
-		margin-top: 10rpx;
-	}
-
-	.example-body {
-		/* #ifndef APP-NVUE */
-		display: block;
-		/* #endif */
-	}
-
-	.grid-dynamic-box {
-		margin-bottom: 15px;
-	}
-
-	.grid-item-box {
-		flex: 1;
-		/* position: relative;
- */
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 15px 0;
-	}
-
-	.grid-dot {
-		position: absolute;
-		top: 5px;
-		right: 15px;
-	}
-
-	.swiper {
-		height: 420px;
-	}
-	
 	.h3 {
 		font-size: 46rpx;
+	}
+	
+	.dept-img {
+		width: 60px;
+		height: 60px;
 	}
 </style>

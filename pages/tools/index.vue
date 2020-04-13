@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-blue" :isBack="false"><block slot="content">首页</block></cu-custom>
-		<!-- <view class="cu-bar bg-white solid-bottom">
+		<view class="cu-bar bg-white solid-bottom">
 			<view class="action">
 				<text class="cuIcon-title text-orange"></text> 基本用法
 			</view>
@@ -60,7 +60,7 @@
 			<view class="cu-item padding-lr-xl" :class="index>scroll?'':'text-blue'" v-for="(item,index) in 10" :key="index" :id="'scroll-' + index">
 				Level {{index + 1}} <text class="num" :data-index="index + 1"></text>
 			</view>
-		</scroll-view> -->
+		</scroll-view>
 	</view>
 </template>
 

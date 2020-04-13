@@ -2,7 +2,6 @@
 	<view>
 		<tools v-if="PageCur == 'mrxc'"></tools>
 		<user v-if="PageCur == 'grzx'"></user>
-		<!-- <element v-if="PageCur == 'xcsh'"></element> -->
 		<work v-if="PageCur == 'xcsh'"></work>
 
 		<!-- 	<components v-if="PageCur == 'component'"></components>
@@ -27,13 +26,11 @@
 <script>
 import tools from '../tools/index.vue';
 import user from '../user/index.vue';
-import element from '../element/index.vue';
 import work from '../work/work.vue'
 export default {
 	components: {
 		tools,
 		user,
-		element,
 		work
 	},
 	data() {
