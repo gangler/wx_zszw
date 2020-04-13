@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">网上办事</block></cu-custom>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="false"><block slot="backText">返回</block><block slot="content">网上办事</block></cu-custom>
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="h3">办事部门</text> 

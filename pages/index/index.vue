@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<tools v-if="PageCur == 'mrxc'"></tools>
+		<news v-if="PageCur == 'mrxc'"></news>
 		<user v-if="PageCur == 'grzx'"></user>
 		<work v-if="PageCur == 'xcsh'"></work>
 
@@ -26,12 +26,14 @@
 <script>
 import tools from '../tools/index.vue';
 import user from '../user/index.vue';
-import work from '../work/work.vue'
+import work from '../work/index.vue';
+import news from '../news/index.vue';
 export default {
 	components: {
 		tools,
 		user,
-		work
+		work,
+		news
 	},
 	data() {
 		return {

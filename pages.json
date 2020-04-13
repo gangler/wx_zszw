@@ -16,13 +16,19 @@
 			"path": "pages/user/index"
 		},
 		{
-			"path": "pages/work/work"
+			"path": "pages/work/index"
 		},
 		{
 			"path": "pages/shared/department-list"
 		},
 		{
 			"path": "pages/shared/pdf"
+		},
+		{
+			"path":"pages/news/index"
+		},
+		{
+			"path":"pages/news/news-detail"
 		}
 		
 	],
