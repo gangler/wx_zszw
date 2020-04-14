@@ -19,7 +19,7 @@
 			"path": "pages/work/index"
 		},
 		{
-			"path": "pages/shared/department-list"
+			"path": "pages/work/department-list"
 		},
 		{
 			"path": "pages/shared/pdf"
@@ -29,6 +29,15 @@
 		},
 		{
 			"path":"pages/news/news-detail"
+		},
+		{
+			"path":"pages/user/account-setting"
+		},
+		{
+			"path":"pages/user/user-service"
+		},
+		{
+			"path":"pages/user/user-advice"
 		}
 		
 	],
@@ -39,7 +48,7 @@
 			"allowsBounceVertical": "NO"
 		},
 		"navigationBarBackgroundColor": "#0081ff",
-		"navigationBarTitleText": "ColorUi for UniApp",
+		"navigationBarTitleText": "掌上政务",
 		"navigationStyle": "custom", // 取消系统导航栏
 		"navigationBarTextStyle": "white"
 	},
@@ -48,7 +57,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "表单", //模式名称
-			"path": "pages/login/index", //启动页面
+			"path": "pages/index/index", //启动页面
 			"query": "" //启动参数
 		}]
 	}

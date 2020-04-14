@@ -1,13 +1,14 @@
 <template>
 	<view class="content">
+		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">登录</block></cu-custom>
 		<image src="../../static/img/bg.jpg" mode=""></image>
 		<view class="login-content">
 			<view v-if="loginType">
 				<view class="input-view padding-sm solids radius">
-					 <input class="uni-input" placeholder="用户名" />
+					 <input class="uni-input text-white" placeholder="用户名" v-model="account" />
 				</view>
 				<view class="input-view padding-sm solids radius">
-					 <input class="uni-input" placeholder="密码" />
+					 <input class="uni-input text-white" type="password" placeholder="密码" v-model="password" />
 				</view>
 			</view>
 			<view v-if="!loginType">
@@ -17,14 +18,16 @@
 					<text class="yan-btn">获取验证码</text>
 				</view>
 			</view>
-			<view class="btn-row"><button class="cu-btn block bg-blue margin-tb-sm lg" @tap="bindLogin">登录</button></view>
-			<view class="login-type" @tap="changeLoginType">{{ loginType ? '手机密码登录' : '用户密码登录' }} ></view>
+			<view class="btn-row"><button class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;" @tap="bindLogin">登录</button></view>
+			<!-- <view class="login-type" @tap="changeLoginType">{{ loginType ? '手机密码登录' : '用户密码登录' }} ></view> -->
 		</view>
 	</view>
 </template>
 
 <script>
 import mInput from '../../components/m-input.vue';
+import loginService from '@/api/login.js';
+import configService from "@/services/config.service.js"
 export default {
 	components: {
 		mInput
@@ -49,6 +52,16 @@ export default {
 			this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
 		},
 		bindLogin() {
+			console.log(this.account)
+			console.log(this.password)
+			let obj = {username: this.account, password: this.password}
+			uni.request({
+				url: configService.apiUrl + '/gxfrTL/login',
+				data: obj,
+				success: (res) => {
+					console.log(res.data)
+				}
+			})
 			// if (this.account.length < 5) {
 			// 	uni.showToast({
 			// 		icon: 'none',
@@ -63,9 +76,11 @@ export default {
 			// 	});
 			// 	return;
 			// }
-			uni.navigateTo({
-				url: '../index/index'
-			})
+			
+			
+			// uni.navigateTo({
+			// 	url: '../index/index'
+			// })
 		},
 		changeLoginType() {
 			this.loginType = !this.loginType;
@@ -88,7 +103,7 @@ export default {
 	}
 	.login-content {
 		position: absolute;
-		top: 50%;
+		top: 45%;
 		left: 50%;
 		width: 80%;
 		transform: translate(-50%, -20%);

@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<!-- <cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">办事部门</block></cu-custom> -->
-		<view class="box">
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">{{infoDetail.title}}</block></cu-custom>
+		<!-- <view class="box">
 			<view class="cu-bar bg-gradual-blue">
 				<view class="action" @click="pageBack()">
 					<text class="cuIcon-back text-gray"></text> 返回
@@ -10,10 +10,11 @@
 					{{infoDetail.title}}
 				</view>
 			</view>
-		</view>
+		</view> -->
 		
-		<view >
-			<view class="text-df padding">{{infoDetail.content}}</view>
+		
+		<view class="container">
+			<editor id="editor" class="ql-container text-lg" :placeholder="placeholder" :read-only="true" ></editor>
 		</view>
 		
 	</view>
@@ -35,12 +36,13 @@
 		},
 		data() {
 			return {
-				informationId: 1,
-				infoDetail: {}
+				informationId: 3,
+				infoDetail: {},
+				placeholder: ''
 			}
 		},
 		created() {
-			
+			// this.getNewsInformation(this.informationId)
 		},
 		methods: {
 			//从新闻列表跳转
@@ -52,17 +54,43 @@
 						UserType: 2
 					},
 					success: (res) => {
-						console.log(res.data)
+						// console.log(res.data)
 						let wlist = res.data.data
 						this.infoDetail = wlist
 						// console.log(this.departmentlist)
+						this.insertEditorInfo()
 					}
 				})
 			},
 			pageBack(){
 				uni.navigateBack()
-			}
+			},
+			// 将html文本内容，放入富文本编辑器
+			insertEditorInfo() {
+				// console.log("aaa",this.infoDetail.content)
+				uni.createSelectorQuery().select('#editor').context((res) => {
+					this.editorCtx = res.context
+					let content={
+						html: this.infoDetail.content
+					}
+					this.editorCtx.setContents(content);//设置富文本编辑器的内容
+				}).exec()
+			},
 		},
 	}
 </script>
-<style></style>
+<style>
+    .container {
+        padding: 10px;
+    }
+
+    #editor {
+        width: 100%;
+        height: 100%;
+        /* background-color: #CCCCCC; */
+    }
+
+    button {
+        margin-top: 10px;
+    }
+</style>

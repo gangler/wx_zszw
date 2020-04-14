@@ -9,10 +9,11 @@ function requestType(type, url, params, resolve, reject) {
 		url: apiUrl + url, //仅为示例，并非真实接口地址。
 		method: type,
 		data: params,
-		header: {
-			'x-auth-token': getToken(),
-		},
+		// header: {
+		// 	'x-auth-token': getToken(),
+		// },
 		success: function(res) {
+			console.log(res)
 			if (res.data.code === '401') { // 校验token值
 				uni.reLaunch({
 					url: '/pages/login/index'

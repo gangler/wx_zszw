@@ -1,20 +1,20 @@
 <template>
-	<view>
+	<view v-if="flag === 1">
 		<!-- 	<cu-custom bgColor="bg-blue">
 			<block slot="content">个人中心</block>
 		</cu-custom> -->
 		<scroll-view scroll-y class="scrollPage">
 			<view class="UCenter-bg text-grey bg-white shadow-warp">
 				<!-- <view class="cu-avatar xl radius" style="margin: 15px;background-image:url(../../static/img/logo.png);"></view> -->
-				<image class="cu-avatar xl round" style="margin: 15px" src="/static/img/logo.png" mode="aspectFit"></image>
+				<image class="cu-avatar xl round" style="margin: 15px" src="/static/img/person.png" mode="aspectFit"></image>
 				<view class="text-xl">
-					<text class="text-white">头像</text>
+					<text class="text-white">{{userName}}</text>
 				</view>
-				<view class="flex solid-bottom padding justify-center">
+			<!-- 	<view class="flex solid-bottom padding justify-center">
 					<image src="/static/img/position.png" style="width: 20px;height: 20px;margin-right: 5px;" class="png" mode="aspectFit"></image>
 					<text class="text-white">系统管理员</text>
-				</view>
-				<!-- <image src="/static/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
+				</view> -->
+				<image src="/static/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 			</view>
 		<!-- 	<view class="padding-xs flex align-center bg-white shadow-warp">
 				<view class="flex-sub text-center">
@@ -23,28 +23,36 @@
 					</view>
 				</view>
 			</view> -->
-			<view class="cu-list menu" style="padding-top: 20px;">
-				<navigator class="cu-item arrow" style="margin: 20px;"  open-type="navigate">
+			<view class="cu-list menu" >
+				<navigator class="cu-item arrow" :url="'/pages/user/user-service'" open-type="navigate">
 					<!-- <view class="cu-avatar round lg" style="background-image:url(/static/logo.png);"></view> -->
-					<image src="/static/img/security.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 					<view class="content padding-tb-sm">
 						<view>
-							<text class="text-blue margin-right-xs"></text> 用户名密码修改</view>
-						<view class="text-gray text-sm">
-							<text class="margin-right-xs"></text> 修改用户名和密码</view>
+							<text class="text-blue margin-right-xs"></text> 我的服务</view>
+						<!-- <view class="text-gray text-sm">
+							<text class="margin-right-xs"></text> 修改用户名和密码</view> -->
 					</view>
 				</navigator>
-				<navigator class="cu-item arrow" style="margin: 20px;" 
-				 open-type="navigate">
-					<image src="/static/img/user.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+				<navigator class="cu-item arrow" :url="'/pages/user/user-advice'" open-type="navigate">
+					<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 					<view class="content padding-tb-sm">
 						<view>
-							<text class="text-blue margin-right-xs"></text> 编辑个人资料</view>
-						<view class="text-gray text-sm">
-							<text class="margin-right-xs"></text> 修改完善个人资料</view>
+							<text class="text-blue margin-right-xs"></text> 我的咨询</view>
+						<!-- <view class="text-gray text-sm">
+							<text class="margin-right-xs"></text> 修改完善个人资料</view> -->
 					</view>
 				</navigator>
-				<view class="cu-item" style="margin: 20px;" @click="logout">
+				<navigator class="cu-item arrow" :url="'/pages/user/account-setting'" open-type="navigate">
+					<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<view class="content padding-tb-sm">
+						<view>
+							<text class="text-blue margin-right-xs"></text> 账户设置</view>
+						<!-- <view class="text-gray text-sm">
+							<text class="margin-right-xs"></text> 修改完善个人资料</view> -->
+					</view>
+				</navigator>
+				<view class="cu-item"  @click="logout">
 					<image src="/static/img/out.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 					<view class="content padding-tb-sm" bindtap="showQrcode">
 						<view>
@@ -77,6 +85,74 @@
 			</view>
 		</view>
 	</view>
+	
+	
+	
+	<view v-else-if="flag === 2">
+		<!-- 	<cu-custom bgColor="bg-blue">
+			<block slot="content">个人中心</block>
+		</cu-custom> -->
+		<scroll-view scroll-y class="scrollPage">
+			<view class="UCenter-bg text-grey bg-white shadow-warp" style="background-image: none; background-color: #215D80;">
+				<image class="cu-avatar xl round" style="margin: 15px" src="/static/img/person.png" mode="aspectFit" @click="toLogin"></image>
+				<view class="text-xl">
+					<text class="text-white">{{userName}}</text>
+				</view>
+				<!-- <image src="/static/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
+			</view>
+			<view class="cu-list menu" >
+				<navigator class="cu-item arrow" :url="'/pages/user/user-service'" open-type="navigate">
+					<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<view class="content padding-tb-sm">
+						<view>
+							<text class="text-blue margin-right-xs"></text> 我的服务</view>
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow" :url="'/pages/user/user-advice'" open-type="navigate">
+					<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<view class="content padding-tb-sm">
+						<view>
+							<text class="text-blue margin-right-xs"></text> 我的咨询</view>
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow" :url="'/pages/user/account-setting'" open-type="navigate">
+					<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<view class="content padding-tb-sm">
+						<view>
+							<text class="text-blue margin-right-xs"></text> 账户设置</view>
+					</view>
+				</navigator>
+				<view class="cu-item arrow"  @click="logout">
+					<image src="/static/img/out.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+					<view class="content padding-tb-sm" bindtap="showQrcode">
+						<view>
+							<text class="text-blue margin-right-xs"></text> 登出</view>
+					</view>
+				</view>
+			</view>
+			<view class="cu-tabbar-height"></view>
+		</scroll-view>
+		<view class="cu-modal" :class="modalVisible ? 'show' : ''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">退出登录</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					您确定要退出登录吗？
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-blue text-blue" @tap="hideModal">取消</button>
+						<button class="cu-btn bg-red margin-left" @tap="confirmLogout">确定</button>
+	
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -84,7 +160,10 @@
 	export default {
 		data() {
 			return {
+				flag: configService.format_type,
 				modalVisible: false,
+				userName: '点击头像登录',
+				
 			};
 		},
 		components: {},
@@ -106,6 +185,12 @@
 					url: '/pages/login/index'
 				});
 			},
+			toLogin() {
+				// 如果未登录，去登录
+				uni.navigateTo({
+					url: '/pages/login/index'
+				})
+			}
 		}
 
 	}
@@ -113,7 +198,7 @@
 
 <style>
 	.UCenter-bg {
-		background-image: url(../../static/img/user-bg.jpeg);
+		background-image: url(../../static/img/user-bg.png);
 		background-size: cover;
 		height: 600rpx;
 		display: flex;
