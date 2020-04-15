@@ -38,6 +38,15 @@
 		},
 		{
 			"path":"pages/user/user-advice"
+		},
+		{
+			"path":"pages/user/setting/modinify-password"
+		},
+		{
+			"path":"pages/user/setting/personal-certification"
+		},
+		{
+			"path":"pages/user/setting/enterprise-certification"
 		}
 		
 	],

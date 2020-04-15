@@ -6,7 +6,7 @@
 		<scroll-view scroll-y class="scrollPage">
 			<view class="UCenter-bg text-grey bg-white shadow-warp">
 				<!-- <view class="cu-avatar xl radius" style="margin: 15px;background-image:url(../../static/img/logo.png);"></view> -->
-				<image class="cu-avatar xl round" style="margin: 15px" src="/static/img/person.png" mode="aspectFit"></image>
+				<image class="cu-avatar xl round" style="margin: 15px" :src="avatarImg" mode="aspectFit" @click="toLogin"></image>
 				<view class="text-xl">
 					<text class="text-white">{{userName}}</text>
 				</view>
@@ -24,35 +24,34 @@
 				</view>
 			</view> -->
 			<view class="cu-list menu" >
-				<navigator class="cu-item arrow" :url="'/pages/user/user-service'" open-type="navigate">
-					<!-- <view class="cu-avatar round lg" style="background-image:url(/static/logo.png);"></view> -->
-					<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 我的服务</view>
-						<!-- <view class="text-gray text-sm">
-							<text class="margin-right-xs"></text> 修改用户名和密码</view> -->
-					</view>
-				</navigator>
-				<navigator class="cu-item arrow" :url="'/pages/user/user-advice'" open-type="navigate">
-					<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 我的咨询</view>
-						<!-- <view class="text-gray text-sm">
-							<text class="margin-right-xs"></text> 修改完善个人资料</view> -->
-					</view>
-				</navigator>
-				<navigator class="cu-item arrow" :url="'/pages/user/account-setting'" open-type="navigate">
-					<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 账户设置</view>
-						<!-- <view class="text-gray text-sm">
-							<text class="margin-right-xs"></text> 修改完善个人资料</view> -->
-					</view>
-				</navigator>
-				<view class="cu-item"  @click="logout">
+				<view class="cu-item arrow" @click="myService">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 我的服务</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item arrow" @click="myAdvice">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 我的咨询</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item arrow" @click="mySetting">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 账户设置</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item"  @click="logout" v-if="isLogin">
 					<image src="/static/img/out.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 					<view class="content padding-tb-sm" bindtap="showQrcode">
 						<view>
@@ -84,6 +83,19 @@
 				</view>
 			</view>
 		</view>
+		<view class="cu-modal" :class="loginModalVisible?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">提示</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					<text class="text-lg">请点击头像登录</text>
+				</view>
+			</view>
+		</view>
 	</view>
 	
 	
@@ -94,35 +106,41 @@
 		</cu-custom> -->
 		<scroll-view scroll-y class="scrollPage">
 			<view class="UCenter-bg text-grey bg-white shadow-warp" style="background-image: none; background-color: #215D80;">
-				<image class="cu-avatar xl round" style="margin: 15px" src="/static/img/person.png" mode="aspectFit" @click="toLogin"></image>
+				<image class="cu-avatar xl round" style="margin: 15px" :src="avatarImg" mode="aspectFit" @click="toLogin"></image>
 				<view class="text-xl">
 					<text class="text-white">{{userName}}</text>
 				</view>
 				<!-- <image src="/static/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
 			</view>
 			<view class="cu-list menu" >
-				<navigator class="cu-item arrow" :url="'/pages/user/user-service'" open-type="navigate">
-					<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 我的服务</view>
-					</view>
-				</navigator>
-				<navigator class="cu-item arrow" :url="'/pages/user/user-advice'" open-type="navigate">
-					<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 我的咨询</view>
-					</view>
-				</navigator>
-				<navigator class="cu-item arrow" :url="'/pages/user/account-setting'" open-type="navigate">
-					<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
-					<view class="content padding-tb-sm">
-						<view>
-							<text class="text-blue margin-right-xs"></text> 账户设置</view>
-					</view>
-				</navigator>
-				<view class="cu-item arrow"  @click="logout">
+				<view class="cu-item arrow" @click="myService">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/service2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 我的服务</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item arrow" @click="myAdvice">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/advice2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 我的咨询</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item arrow" @click="mySetting">
+					<button class="cu-btn content" open-type="contact">
+						<image src="/static/img/setting2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+						<view class="content padding-tb-sm">
+							<view>
+								<text class="text-blue margin-right-xs"></text> 账户设置</view>
+						</view>
+					</button>
+				</view>
+				<view class="cu-item arrow"  @click="logout" v-if="isLogin">
 					<image src="/static/img/out.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 					<view class="content padding-tb-sm" bindtap="showQrcode">
 						<view>
@@ -152,17 +170,35 @@
 				</view>
 			</view>
 		</view>
+		<view class="cu-modal" :class="loginModalVisible?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">提示</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					<text class="text-lg">请点击头像登录</text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 	import configService from '@/services/config.service.js';
+	
 	export default {
 		data() {
 			return {
 				flag: configService.format_type,
 				modalVisible: false,
+				loginModalVisible: false,
 				userName: '点击头像登录',
+				avatarImg: '/static/img/person.png',
+				userInfo: null,
+				isLogin: false
 				
 			};
 		},
@@ -170,7 +206,21 @@
 		onLoad() {
 
 		},
-		created() {},
+		created() {
+			try {
+			    const userinfo = uni.getStorageSync('user_info');
+			    if (userinfo) {
+					this.isLogin = true
+			        console.log(userinfo);
+					this.userName = userinfo.p_name
+					this.avatarImg = userinfo.avatarUrl
+					
+			    }
+			} catch (e) {
+			    // error
+				console.log(e)
+			}
+		},
 		mounted() {
 		},
 		methods: {
@@ -179,20 +229,59 @@
 			},
 			hideModal() {
 				this.modalVisible = false;
+				this.loginModalVisible = false;
 			},
 			confirmLogout() {
+				this.isLogin = false;
+				try {
+				    uni.removeStorageSync('user_info');
+				} catch (e) {
+				    // error
+					console.log(e)
+				}
 				uni.reLaunch({
-					url: '/pages/login/index'
+					url: '/pages/user/index'
 				});
 			},
 			toLogin() {
 				// 如果未登录，去登录
-				uni.navigateTo({
-					url: '/pages/login/index'
-				})
+				if(!this.isLogin) {
+					uni.navigateTo({
+						url: '/pages/login/index'
+					})
+				}
+			},
+			// 我的服务
+			myService() {
+				if(this.isLogin) {
+					uni.navigateTo({
+						url: '/pages/user/user-service'
+					})
+				}else{
+					this.loginModalVisible = true
+				}
+			},
+			// 我的咨询
+			myAdvice() {
+				if(this.isLogin) {
+					uni.navigateTo({
+						url: '/pages/user/user-advice'
+					})
+				}else{
+					this.loginModalVisible = true
+				}
+			},
+			// 账户设置
+			mySetting() {
+				if(this.isLogin) {
+					uni.navigateTo({
+						url: '/pages/user/account-setting'
+					})
+				}else{
+					this.loginModalVisible = true
+				}
 			}
 		}
-
 	}
 </script>
 
