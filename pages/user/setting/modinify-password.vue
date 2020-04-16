@@ -1,6 +1,6 @@
 <template>
-	<view class="content" v-if="flag === 1">
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">修改密码</block></cu-custom>
+	<view class="content" >
+		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="isBack"><block slot="backText"></block><block slot="content">修改密码</block></cu-custom>
 		<!-- <image src="@/static/img/bg.jpg" mode=""></image> -->
 		<view class="login-content">
 			<view class="flex">
@@ -8,7 +8,7 @@
 					 <view class="text-xl text-black">原密码：</view>
 				</view>
 				<view class="input-view flex-twice padding-sm radius">
-					 <input class="uni-input text-white" type="password" placeholder="请输入原密码" v-model="password" />
+					 <input class="uni-input text-black" type="password" placeholder="请输入原密码" v-model="password" />
 				</view>
 			</view>
 			<view class="flex">
@@ -16,7 +16,7 @@
 					 <view class="text-xl text-black">新密码：</view>
 				</view>
 				<view class="input-view flex-twice padding-sm radius">
-					 <input class="uni-input text-white" type="password" placeholder="请输入新密码" v-model="newpassword" />
+					 <input class="uni-input text-black" type="password" placeholder="请输入新密码" v-model="newpassword" />
 				</view>
 			</view>
 	<!-- 		<view class="flex">
@@ -24,7 +24,7 @@
 					 <view class="text-xl text-black">手机号：</view>
 				</view>
 				<view class="input-view flex-twice padding-sm radius">
-					 <input class="uni-input text-white" type="password" placeholder="请输入手机号" v-model="password" />
+					 <input class="uni-input text-black" type="password" placeholder="请输入手机号" v-model="password" />
 				</view>
 			</view> -->
 			<view class="btn-row"><button class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;" @tap="bindChange">确认修改</button></view>
@@ -33,6 +33,21 @@
 			<view class="gray-text">提交中...</view>
 		</view>
 		<view class="cu-load bg-red erro" v-if="isError" @click="closeErrModel">{{errStr}}</view>
+		<view class="cu-modal" :class="reLoginModal?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">提示</view>
+				</view>
+				<view class="padding-xl">
+					密码已修改，请重新登录
+				</view>
+				<view class="cu-bar bg-white">
+					<!-- <view class="action margin-0 flex-sub text-green solid-left" @tap="hideModal">取消</view> -->
+					<view class="action margin-0 flex-sub  solid-left" @tap="reLogin">确定</view>
+				</view>
+			</view>
+		</view>
+		
 	</view>
 	
 	
@@ -49,6 +64,8 @@ export default {
 		return {
 			flag: configService.format_type,
 			positionTop: 0,
+			reLoginModal: false,
+			isBack: true,
 			isLogin: false,
 			password: '',
 			newpassword: '',
@@ -61,20 +78,19 @@ export default {
 	onReady() {
 		this.initPosition();
 	},
-	// created() {
-	// 	try {
-	// 	    const userinfo = uni.getStorageSync('user_info');
-	// 	    if (userinfo) {
-	// 			this.isLogin = true
-	// 	        console.log(userinfo);
-	// 			this.log_verify_code = userinfo.log_verify_code
-				
-	// 	    }
-	// 	} catch (e) {
-	// 	    // error
-	// 		console.log(e)
-	// 	}
-	// },
+	created() {
+		try {
+		    const userinfo = uni.getStorageSync('user_info');
+		    if (userinfo) {
+				this.isLogin = true
+		        // console.log(userinfo);
+				this.log_verify_code = userinfo.log_verify_code
+		    }
+		} catch (e) {
+		    // error
+			console.log(e)
+		}
+	},
 	methods: {
 		initPosition() {
 			/**
@@ -83,54 +99,76 @@ export default {
 			 */
 			this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
 		},
-		// bindChange() {
-		// 	if(!this.password || !this.newpassword){
-		// 		this.isError = true
-		// 		this.errStr = '密码不能为空'
-		// 		return
-		// 	}
-		// 	this.loadModal = true
-		// 	// console.log(this.password)
-		// 	// console.log(this.newpassword)
-		// 	let encryPwd = md5(configService.encry_string + this.newpassword)
-		// 	// console.log(encryPwd)
-		// 	let obj = {username: this.password, password: encryPwd}
-		// 	uni.request({
-		// 		url: configService.apiUrl + '/gxfrTL/login',
-		// 		data: obj,
-		// 		success: (res) => {
-		// 			console.log(res.data)
-		// 			let userinfo = res.data.data
-		// 			if(userinfo){
-		// 				console.log('登录成功')
-		// 				this.isError = false
-		// 				this.loadModal = false
-		// 				// 保存用户信息
-		// 				uni.setStorage({
-		// 				    key: 'user_info',
-		// 				    data: userinfo,
-		// 				    success: function () {
-		// 				        console.log('success');
-		// 				    }
-		// 				});
-		// 				// 跳转到首页
-		// 				uni.navigateTo({
-		// 					url: '../index/index'
-		// 				})
-		// 			}else{
-		// 				this.loadModal = false
-		// 				this.isError = true
-		// 				this.errStr = res.data.message
-		// 			}
-		// 		},
-		// 		fail: (res) => {
-		// 			this.isError = true
-		// 			this.errStr = res
-		// 		}
-		// 	})
-		// },
+		bindChange() {
+			if(!this.password || !this.newpassword){
+				this.isError = true
+				this.errStr = '密码不能为空'
+				return
+			}
+			if(!this.pwdVerified(this.newpassword)){
+				this.isError = true
+				this.errStr = '新密码至少6位数,且至少包含一个字母和数字'
+				return
+			}
+			this.loadModal = true
+			this.isError = false
+			let encryPwd = md5(configService.encry_string + this.password)
+			let encryNewPwd = md5(configService.encry_string + this.newpassword)
+			// console.log(encryPwd)
+			// console.log(encryNewPwd)
+			uni.request({
+				url: configService.apiUrl + '/gxfrTL/changePassword',
+				data: {
+				    password: encryPwd,
+				    newPassword: encryNewPwd,
+				    log_verify_code: this.log_verify_code,
+				    UserType: 2,
+				},
+				success: (res) => {
+					console.log(res)
+					if(res.data != "") {
+						if(res.data.code == "0") {
+							// 修改成功
+							this.isBack = false
+							this.reLoginModal = true
+						}else {
+							// 修改失败
+							this.isError = true
+							this.errStr = res.data.message
+						}
+					}else{
+						// log_verify_code失效
+						console.log(res)
+					}
+					this.loadModal = false
+				},
+				fail: (res) => {
+					this.isError = true
+					this.errStr = res
+				}
+			})
+		},
+		// 密码强度验证
+		pwdVerified(str) {
+			let reg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+			return reg.test(str);
+		},
 		closeErrModel() {
 			this.isError = false;
+		},
+		// 重新登录
+		reLogin() {
+			// 清除用户信息
+			try {
+			    uni.removeStorageSync('user_info');
+			} catch (e) {
+			    // error
+				console.log(e)
+			}
+			// 跳转用户页
+			uni.reLaunch({
+			    url: '/pages/user/index'
+			});
 		}
 	},
 	

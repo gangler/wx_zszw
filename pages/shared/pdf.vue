@@ -5,7 +5,7 @@
 </template>
 
 <script>
-	import serverurl from "@/common/globalconfigs.js"
+	import configService from '@/services/config.service.js';
 	
 	
 	export default {

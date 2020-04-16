@@ -22,7 +22,7 @@
 
 
 <script>
-	import serverurl from "@/common/globalconfigs.js"
+	import configService from '@/services/config.service.js';
 	
 	export default {
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
@@ -48,7 +48,7 @@
 			//从新闻列表跳转
 			getNewsInformation(val) {
 				uni.request({
-					url: serverurl + '/gxsdapi/get_information',
+					url: configService.apiUrl + '/gxsdapi/get_information',
 					data: {
 						information_id: val,
 						UserType: 2

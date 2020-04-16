@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">账户设置</block></cu-custom>
+		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">账户设置</block></cu-custom>
+		<cu-custom v-else-if="flag == 2" class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">账户设置</block></cu-custom>
 		<scroll-view scroll-y class="scrollPage">
 			<view class="cu-list menu" >
 				<view class="cu-item arrow" @click="myPwd">
@@ -49,9 +50,11 @@
 	export default {
 		data() {
 			return {
+				flag: configService.format_type,
 				isLogin: false,
 				perVerified: 0,
 				compVerified: 0,
+				mobile: '',
 			};
 		},
 		components: {},
@@ -64,9 +67,8 @@
 			    if (userinfo) {
 					this.isLogin = true
 			        console.log(userinfo);
-					this.perVerified = userinfo.state
-					this.compVerified = userinfo.organizationcertified
-					
+					this.mobile = userinfo.mobile
+					this.getUserState()
 			    }
 			} catch (e) {
 			    // error
@@ -76,6 +78,28 @@
 		mounted() {
 		},
 		methods: {
+			// 获取用户实名状态
+			getUserState() {
+				if(this.mobile != '') {
+					uni.request({
+						url: configService.apiUrl + '/gxfrTL/getState',
+						data: {
+							mobile: this.mobile,
+						},
+						success: (res) => {
+							// console.log(res)
+							if(res.data.Result) {
+								console.log('state--', res.data.Data)
+								this.perVerified = res.data.Data.state
+								this.compVerified = res.data.Data.organizationcertified
+							}
+						},
+						fail: (res) => {
+							console.log(res)
+						}
+					})
+				}
+			},
 			// 修改密码
 			myPwd() {
 				if(this.isLogin) {

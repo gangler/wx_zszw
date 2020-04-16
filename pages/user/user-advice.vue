@@ -7,7 +7,7 @@
 
 
 <script>
-	import serverurl from "@/common/globalconfigs.js"
+	import configService from '@/services/config.service.js';
 	
 	export default {
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
