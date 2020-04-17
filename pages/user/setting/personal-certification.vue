@@ -16,7 +16,7 @@
 					身份证正、反面照片
 				</view>
 				<view class="action">
-					{{imgList.length}}/4
+					<!-- {{imgList.length}}/4 -->
 				</view>
 			</view>
 			<view style="display: none;">
@@ -28,9 +28,9 @@
 					<view class="flex-sub" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;margin-right: 10px;'">
 						<view class="bg-img flex" v-for="(item,index) in imgList" :key="index" @tap="ViewImage" :data-url="imgList[index]">
 							<view>
-								<image class="card-img" :src="imgList[index]" mode="aspectFill"></image>
+								<image class="card-img radius" :src="imgList[index]" mode="aspectFill"></image>
 							</view>
-							<view class="cu-tag bg-grey del-tab " @tap.stop="DelImg" :data-index="index">
+							<view class="cu-tag bg-grey del-tab radius" @tap.stop="DelImg" :data-index="index">
 								<text class='cuIcon-close'></text>
 							</view>
 						</view>
@@ -41,7 +41,7 @@
 					</view>
 					<view class="flex-sub" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;margin-right: 10px;'">
 						<view class="bg-img flex" >
-								<image class="card-img" src="/static/img/idcard/zheng.png" mode="aspectFill"></image>
+								<image class="card-img radius" src="/static/img/idcard/zheng.png" mode="aspectFill"></image>
 						</view>
 					</view>
 				</view>
@@ -52,9 +52,9 @@
 					<view class="flex-sub" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;margin-right: 10px;'">
 						<view class="bg-img flex" v-for="(item,index) in imgList_fan" :key="index" @tap="ViewImageFan" :data-url="imgList_fan[index]">
 							<view>
-								<image class="card-img" :src="imgList_fan[index]" mode="aspectFill"></image>
+								<image class="card-img radius" :src="imgList_fan[index]" mode="aspectFill"></image>
 							</view>
-							<view class="cu-tag bg-grey del-tab " @tap.stop="DelImgFan" :data-index="index">
+							<view class="cu-tag bg-grey del-tab radius" @tap.stop="DelImgFan" :data-index="index">
 								<text class='cuIcon-close'></text>
 							</view>
 						</view>
@@ -65,7 +65,7 @@
 					</view>
 					<view class="flex-sub" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;margin-right: 10px;'">
 						<view class="bg-img flex" >
-								<image class="card-img" src="/static/img/idcard/fan.png" mode="aspectFill"></image>
+								<image class="card-img radius" src="/static/img/idcard/fan.png" mode="aspectFill"></image>
 						</view>
 					</view>
 				</view>
@@ -87,8 +87,9 @@
 				imgList_fan: [],
 				imgWidth: 230,
 				imgHeight: 124,
-				materPositive: null,
-				materOpposite: null
+				materPositive: '',
+				materOpposite: '',
+				log_verify_code: ''
 			};
 		},
 		components: {},
@@ -107,8 +108,11 @@
 			    if (userinfo) {
 					this.isLogin = true
 			        console.log(userinfo);
+					this.log_verify_code = userinfo.log_verify_code
+			    }else {
+					console.log("未登录")
 					
-			    }
+				}
 			} catch (e) {
 			    // error
 				console.log(e)
@@ -135,7 +139,7 @@
 						let file = res.tempFiles[0]
 						// console.log(file.name)
 						let type = file.name.substring(file.name.indexOf('.')+1)
-						console.log('type', type)
+						// console.log('type', type)
 						uni.request({
 							url: res.tempFilePaths[0], //v本地路径
 							method: 'GET',
@@ -143,7 +147,7 @@
 							success: res => {
 								let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
 								// base64 ='data:image/jpeg;base64,'+base64 //不加上这串字符，在页面无法显示
-								console.log(base64)
+								// console.log(base64)
 								// 文件上传
 								uni.request({
 									url: configService.apiUrl + '/gxfrTL/uploadFile',
@@ -188,6 +192,7 @@
 					success: res => {
 						if (res.confirm) {
 							this.imgList.splice(e.currentTarget.dataset.index, 1)
+							this.materPositive = ''
 						}
 					}
 				})
@@ -208,7 +213,7 @@
 						let file = res.tempFiles[0]
 						// console.log(file.name)
 						let type = file.name.substring(file.name.indexOf('.')+1)
-						console.log('type', type)
+						// console.log('type', type)
 						uni.request({
 							url: res.tempFilePaths[0], //v本地路径
 							method: 'GET',
@@ -216,7 +221,7 @@
 							success: res => {
 								let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
 								// base64 ='data:image/jpeg;base64,'+base64 //不加上这串字符，在页面无法显示
-								console.log(base64)
+								// console.log(base64)
 								// 文件上传
 								uni.request({
 									url: configService.apiUrl + '/gxfrTL/uploadFile',
@@ -263,6 +268,7 @@
 					success: res => {
 						if (res.confirm) {
 							this.imgList_fan.splice(e.currentTarget.dataset.index, 1)
+							this.materOpposite = ''
 						}
 					}
 				})
@@ -270,12 +276,7 @@
 			// 表单提交
 			formSubmit(e) {
 				let idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
-				var formdata = e.detail.value
-				// uni.showModal({
-				// 	content: '表单数据内容：' + JSON.stringify(formdata),
-				// 	showCancel: false
-				// });
+				let formdata = e.detail.value
 				
 				if(!formdata.p_name || !formdata.id_card) {
 					uni.showModal({
@@ -284,33 +285,44 @@
 					});
 					return
 				}
-				if(!materPositive || !materOpposite) {
-					
+				if(!formdata.mater_positive || !formdata.mater_opposite) {
+					uni.showModal({
+						content: '照片不能为空',
+						showCancel: false
+					});
+					return
+				}
+				if(!idcardReg.test(formdata.id_card)){
+					uni.showModal({
+						content: '身份证格式错误',
+						showCancel: false
+					});
+					return
 				}
 				
-				// uni.request({
-				// 	url: configService.apiUrl + '/gxfrTL/updateUserAuthentication',
-				// 	method: 'POST',
-				// 	data: {
-				// 	    p_name: name,
-				// 	    id_card: number,
-				// 	    mater_positive: mater_positive,
-				// 	    mater_opposite: mater_opposite,
-				// 	    UserType: 2,
-				// 	    log_verify_code: log_verify_code
-				// 	},
-				// 	success: (res) => {
-				// 		// console.log(res)
-				// 		if(res.data.code == "0") {
-				// 			if(res.data.data != "") {
-				// 				console.log(res.data.data)
-				// 			}
-				// 		}
-				// 	},
-				// 	fail: (res) => {
-				// 		console.log(res)
-				// 	}
-				// })
+				formdata.UserType = 2
+				formdata.log_verify_code = this.log_verify_code
+				console.log(formdata)
+				// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
+				
+				uni.request({
+					url: configService.apiUrl + '/gxfrTL/updateUserAuthentication',
+					method: 'POST',
+					data: formdata,
+					success: (res) => {
+						console.log(res.data)
+						if(res.data.code == "0") {
+							if(res.data.data) {
+								// console.log(res.data.data)
+								// 成功
+								uni.navigateBack()
+							}
+						}
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
 				
 			},
 			

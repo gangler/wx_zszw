@@ -61,6 +61,9 @@
 		onLoad() {
 	
 		},
+		onShow() {
+			this.getUserState()
+		},
 		created() {
 			try {
 			    const userinfo = uni.getStorageSync('user_info');

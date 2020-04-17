@@ -1,7 +1,19 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">我的咨询</block></cu-custom>
+		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">我的咨询</block></cu-custom>
+		<cu-custom v-else-if="flag == 2" class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">我的咨询</block></cu-custom>
 		
+		<view class="cu-list menu">
+			<view class="cu-item" v-for="(item, index) in adviceList" :index="index" :key="index" >
+				<view class="content padding-tb-sm">
+					<view>
+						<text class="cuIcon-clothesfill text-blue margin-right-xs"></text> 多行Item</view>
+					<view class="text-gray text-sm">
+						
+						<text class="cuIcon-infofill margin-right-xs"></text> 小目标还没有实现！</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -10,26 +22,62 @@
 	import configService from '@/services/config.service.js';
 	
 	export default {
-		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			console.log(option); //打印出上个页面传递的参数。
-			// if(option && option.id != undefined){
-			// 	this.informationId = option.id
-			// }
-		},
 		components: {
 		},
 		data() {
 			return {
-				informationId: 3,
+				flag: configService.format_type,
+				userId: 17,
 				infoDetail: {},
-				placeholder: ''
+				placeholder: '',
+				adviceList: []
 			}
 		},
+		onShow() {
+			this.getAdviceList()
+		},
 		created() {
-			
+			try {
+			    const userinfo = uni.getStorageSync('user_info');
+			    if (userinfo) {
+			        console.log(userinfo);
+					this.userId = userinfo.userId
+					// this.getAdviceList()
+			    }
+			} catch (e) {
+			    // error
+				console.log(e)
+			}
 		},
 		methods: {
-			
+			getAdviceList() {
+				uni.request({
+					url: configService.apiUrl + '/gxfrTL/GetMyConsult',
+					method: 'POST',
+					data: {
+						USERID: this.userId,
+						State: -1
+					},
+					success: (res) => {
+						// console.log(JSON.parse(res.data))
+						let resp = JSON.parse(res.data)
+						if(resp.Result) {
+							this.adviceList = resp.Data
+							console.log(this.adviceList)
+						}
+						// if(res.data.code == "0") {
+						// 	if(res.data.data) {
+						// 		// console.log(res.data.data)
+						// 		// 成功
+						// 		uni.navigateBack()
+						// 	}
+						// }
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
+			}
 		},
 	}
 </script>
