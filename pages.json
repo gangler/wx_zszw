@@ -47,6 +47,15 @@
 		},
 		{
 			"path":"pages/user/setting/enterprise-certification"
+		},
+		{
+			"path":"pages/user/advice/advice-details"
+		},
+		{
+			"path":"pages/user/advice/advice-add"
+		},
+		{
+			"path":"pages/work/work-table"
 		}
 		
 	],

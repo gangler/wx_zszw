@@ -81,13 +81,16 @@
 				<text class="text-lg">直接网上办理事项</text> 
 			</view>
 		</view>
-		<view class="cu-list menu">
-			<view class="cu-item" v-for="(item, index) in hotlist" :index="index" :key="index">
-				<view class="content" @click="hotchange(item)">
-					<text class="text-grey">{{item.AffairName}}</text>
+		<scroll-view style="height:300px;" :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltoupper="upper" @scrolltolower="lower"
+		@scroll="scroll">
+			<view class="cu-list menu">
+				<view class="cu-item" v-for="(item, index) in hotlist" :index="index" :key="index">
+					<view class="content" @click="hotchange(item)">
+						<text class="text-grey">{{item.AffairName}}</text>
+					</view>
 				</view>
 			</view>
-		</view>
+		</scroll-view>
 		
 	</view>
 </template>
@@ -103,7 +106,11 @@
 				flag: configService.format_type,
 				worklist: [],
 				levellist: [],
-				hotlist: []
+				hotlist: [],
+				scrollTop: 0,
+				old: {
+					scrollTop: 0
+				},
 			}
 		},
 		created() {
@@ -149,7 +156,7 @@
 				console.log('name', name)
 				console.log('level', level)
 				uni.navigateTo({
-				    url: '../shared/department-list?name=' + name + '&level=' + level
+				    url: '../work/department-list?name=' + name + '&level=' + level
 				});
 			},
 			//热门办理事项
@@ -167,7 +174,7 @@
 					}
 				})
 			},
-			hotchange(item){
+			hotchange(item) {
 				console.log(item)
 				uni.navigateTo({
 				    url: '../shared/pdf?Affairid=' + item.Affairid 
@@ -176,7 +183,17 @@
 						+ '&IsNetAccepet=' + item.IsNetAccepet 
 						
 				});
-			}
+			},
+			upper: function(e) {
+				// console.log(e)
+			},
+			lower: function(e) {
+				// console.log(e)
+			},
+			scroll: function(e) {
+				// console.log(e)
+				this.old.scrollTop = e.detail.scrollTop
+			},
 		}
 	}
 	

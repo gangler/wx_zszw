@@ -78,6 +78,7 @@
 
 <script>
 	import configService from '@/services/config.service.js';
+	import {idcardFormatCheck} from '@/common/inspect.js';
 	export default {
 		data() {
 			return {
@@ -275,7 +276,6 @@
 			},
 			// 表单提交
 			formSubmit(e) {
-				let idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
 				let formdata = e.detail.value
 				
 				if(!formdata.p_name || !formdata.id_card) {
@@ -292,7 +292,7 @@
 					});
 					return
 				}
-				if(!idcardReg.test(formdata.id_card)){
+				if(!idcardFormatCheck(formdata.id_card)){
 					uni.showModal({
 						content: '身份证格式错误',
 						showCancel: false
