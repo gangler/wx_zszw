@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">{{infoDetail.title}}</block></cu-custom>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true" v-if="flag === 1"><block slot="backText">返回</block><block slot="content">{{infoDetail.title}}</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="true" v-else-if="flag === 2"><block slot="backText">返回</block><block slot="content">{{infoDetail.title}}</block></cu-custom>
 		<!-- <view class="box">
 			<view class="cu-bar bg-gradual-blue">
 				<view class="action" @click="pageBack()">
@@ -36,6 +37,7 @@
 		},
 		data() {
 			return {
+				flag: configService.format_type,
 				informationId: 3,
 				infoDetail: {},
 				placeholder: ''

@@ -1,10 +1,10 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/login/index"
+			"path": "pages/index/index"
 		},
 		{
-			"path": "pages/index/index"
+			"path": "pages/login/index"
 		},
 		{
 			"path": "pages/tools/index"
@@ -56,6 +56,12 @@
 		},
 		{
 			"path":"pages/work/work-table"
+		},
+		{
+			"path":"pages/work/work-table-detail"
+		},
+		{
+			"path":"pages/work/work-apply"
 		}
 		
 	],
@@ -65,7 +71,7 @@
 			"transparentTitle": "always",
 			"allowsBounceVertical": "NO"
 		},
-		"navigationBarBackgroundColor": "#0081ff",
+		"navigationBarBackgroundColor": "#215d80",
 		"navigationBarTitleText": "掌上政务",
 		"navigationStyle": "custom", // 取消系统导航栏
 		"navigationBarTextStyle": "white"

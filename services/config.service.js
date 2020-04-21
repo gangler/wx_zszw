@@ -1,5 +1,6 @@
 const configService = {
 	apiUrl: 'http://47.101.41.168:8066',
+	pdfUrl: 'http://zszw.jsyizhengda.com/StaticHtml/shared/pdf-wx.html',
 	storage_key: 'test_key',
 	// MD5加密字符串
 	encry_string: 'YZD1234567890',

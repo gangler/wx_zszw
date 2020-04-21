@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">我的咨询</block></cu-custom>
-		<cu-custom v-else-if="flag == 2" class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">我的咨询</block></cu-custom>
+		<cu-custom v-else-if="flag == 2" bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">我的咨询</block></cu-custom>
 		
 		<view>
 			<scroll-view :style="'height:'+scrollHeight+'px;'" :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltoupper="upper" @scrolltolower="lower"
@@ -25,7 +25,7 @@
 			</scroll-view>
 		</view>
 		<view class="padding flex flex-direction">
-			<button class="cu-btn bg-grey lg" style="background-color: #215D80;" @click="addNewAdvice">新建</button>
+			<button class="cu-btn bg-darkblue lg" @click="addNewAdvice">新建</button>
 		</view>
 	</view>
 </template>

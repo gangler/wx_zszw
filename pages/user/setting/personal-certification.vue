@@ -71,7 +71,9 @@
 				</view>
 			</view>
 			<!-- <button form-type="submit">Submit</button> -->
-			<view class="btn-row"><button form-type="submit" class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;">提交</button></view>
+			<view class="btn-row padding-lg">
+				<button form-type="submit" class="cu-btn block bg-darkblue lg">提交</button>
+			</view>
 		</form>
 	</view>
 </template>
@@ -98,7 +100,7 @@
 	
 		},
 		created() {
-			let winWidth = uni.getSystemInfoSync().windowWidth
+			let winWidth = uni.getSystemInfoSync().windowWidth;
 			let winHeight = uni.getSystemInfoSync().windowHeight;
 			// console.log(winHeight)
 			// console.log(winWidth)

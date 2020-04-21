@@ -1,21 +1,6 @@
 <template>
 	<view v-if="flag === 1">
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">办事部门</block></cu-custom>
-	<!-- 	<view class="box">
-			<view class="cu-bar bg-gradual-blue">
-				<view class="action" @click="pageBack()">
-					<text class="cuIcon-back text-gray"></text> 返回
-				</view>
-				<view class="content text-bold">
-					办事部门
-				</view>
-				<view class="action">
-					<text>请选择部门</text>
-					<text class="cuIcon-triangledownfill"></text>
-				</view>
-			</view>
-		</view> -->
-		
 		<scroll-view scroll-x class="bg-white nav" scroll-with-animation :scroll-left="scrollLeft">
 			<view class="cu-item" :class="index==TabCur?'text-orange cur':''" v-for="(item, index) in worklist" :index="index" :key="index" @tap="tabSelect" @click="getDepartmentList(item.ID)" :data-id="index" :data-deptid="item.ID">
 				<text>{{item.CNAME}}</text>
@@ -34,7 +19,7 @@
 	
 	
 	<view v-else-if="flag === 2">
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">办事部门</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">办事部门</block></cu-custom>
 		
 		<scroll-view scroll-x class="bg-white nav" scroll-with-animation :scroll-left="scrollLeft">
 			<view class="cu-item" :class="index==TabCur?'text-black cur':''" v-for="(item, index) in worklist" :index="index" :key="index" @tap="tabSelect" @click="getDepartmentList(item.ID)" :data-id="index" :data-deptid="item.ID">

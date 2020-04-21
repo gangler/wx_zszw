@@ -25,7 +25,7 @@
 	
 	
 	<view class="content2" v-else-if="flag === 2">
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">登录</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">登录</block></cu-custom>
 		<!-- <image src="../../static/img/bg.jpg" mode=""></image> -->
 		<view class="login-content">
 			<view v-if="loginType">

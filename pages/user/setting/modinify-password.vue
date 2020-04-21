@@ -1,6 +1,6 @@
 <template>
 	<view class="content" >
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="isBack"><block slot="backText"></block><block slot="content">修改密码</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="isBack"><block slot="backText"></block><block slot="content">修改密码</block></cu-custom>
 		<!-- <image src="@/static/img/bg.jpg" mode=""></image> -->
 		<view class="login-content">
 			<view class="flex">
@@ -27,7 +27,9 @@
 					 <input class="uni-input text-black" type="password" placeholder="请输入手机号" v-model="password" />
 				</view>
 			</view> -->
-			<view class="btn-row"><button class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;" @tap="bindChange">确认修改</button></view>
+			<view class="btn-row">
+				<button class="cu-btn block bg-darkblue margin-tb-sm lg" @tap="bindChange">确认修改</button>
+			</view>
 		</view>
 		<view class="cu-load load-modal" v-if="loadModal">
 			<view class="gray-text">提交中...</view>

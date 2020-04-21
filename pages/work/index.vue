@@ -45,7 +45,7 @@
 	
 	
 	<view v-else-if="flag === 2">
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="false"><block slot="backText">返回</block><block slot="content">办事</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="false"><block slot="backText">返回</block><block slot="content">办事</block></cu-custom>
 		<view class="cu-bar bg-white solid-bottom">
 			<view class="action">
 				<text class="cuIcon-circlefill text-grey"></text>

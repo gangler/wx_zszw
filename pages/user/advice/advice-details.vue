@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">咨询详情</block></cu-custom>
-		<cu-custom v-else-if="flag == 2" class="bg-blue" style="background-color: #215D80;" :isBack="true"><block slot="backText"></block><block slot="content">咨询详情</block></cu-custom>
+		<cu-custom v-else-if="flag == 2" bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">咨询详情</block></cu-custom>
 		
 		<view class="cu-form-group margin-top">
 			<view class="title">咨询时间</view>

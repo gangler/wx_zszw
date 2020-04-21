@@ -1,9 +1,13 @@
 <template>
 	<view>
-		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">{{tableName}}</block></cu-custom>
-		<cu-custom v-else-if="flag == 2" bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">{{tableName}}</block></cu-custom>
+		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">申请办事</block></cu-custom>
+		<cu-custom v-else-if="flag == 2" bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">申请办事</block></cu-custom>
 		
-		<view class="cu-list menu">
+		<view>
+			<text>{{affairId}}</text>
+			<text>{{affairCode}}</text>
+		</view>
+		<!-- <view class="cu-list menu">
 			<view class="cu-item arrow" v-for="(item, index) in materialList" :index="index" :key="index" @click="getMaterialDetail(item.MATNAME, (type==0?item.EMPTYTABLEPATH:item.EXAMPLEPATH))">
 				<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 				<view class="content padding-left">
@@ -11,7 +15,7 @@
 					<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		
 	</view>
 </template>
@@ -22,14 +26,11 @@
 	export default {
 		onLoad: function (option) {
 			console.log(option)
-			if (option && option.name) {
-				this.tableName = option.name;
-			}
 			if (option && option.affairId) {
 				this.affairId = option.affairId;
 			}
-			if (option && option.type) {
-				this.type = option.type;
+			if (option && option.affairCode) {
+				this.affairCode = option.affairCode;
 			}
 			// if (option && option.IsNetAccepet) {
 			// 	this.IsNetAccepet = option.IsNetAccepet;
@@ -40,14 +41,13 @@
 		data() {
 			return {
 				flag: configService.format_type,
-				tableName: '办事空表',
 				affairId: 105,
+				affairCode: '',
 				materialList: [],
 				type: 0,
 			}
 		},
 		onShow() {
-			this.getMaterialList()
 		},
 		created() {
 		},
@@ -72,18 +72,7 @@
 					}
 				})
 			},
-			getMaterialDetail(materialName, src) {
-				if(src) {
-					uni.navigateTo({
-					    url: '../work/work-table-detail?name=' + materialName + '&src=' + src
-					});
-				}else {
-					uni.showModal({
-						content: '没有对应文件',
-						showCancel: false
-					});
-				}
-			}
+			
 			
 		}
 	}

@@ -24,7 +24,7 @@
 	</view>
 	
 	<view v-else-if="flag === 2">
-		<cu-custom class="bg-blue" style="background-color: #215D80;" :isBack="false"><block slot="backText">返回</block><block slot="content">资讯</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="false"><block slot="backText">返回</block><block slot="content">资讯</block></cu-custom>
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
 				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item, index) in categorylist" :index="index" :key="index" @tap="tabSelect" @click="getNewsList(item.category_id)" :data-id="index" :data-catid="item.category_id">
