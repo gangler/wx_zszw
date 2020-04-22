@@ -5,29 +5,29 @@
 		<form @submit="formSubmit">
 			<view class="cu-form-group margin-top">
 				<view class="title">企业名称</view>
-				<input placeholder="请输入企业名称" name="CorpName"></input>
+				<input class="text-right" placeholder="请输入企业名称" name="CorpName"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">企业统一社会信用代码</view>
-				<input placeholder="请输入统一社会信用代码" name="CorpId"></input>
+				<input class="text-right" placeholder="请输入统一社会信用代码" name="CorpId"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">类型</view>
-				<input placeholder="请输入类型" name="CorpType"></input>
+				<input class="text-right" placeholder="请输入类型" name="CorpType"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">住所</view>
-				<input placeholder="请输入住所" name="CorpAddress"></input>
+				<input class="text-right" placeholder="请输入住所" name="CorpAddress"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">法人代表</view>
-				<input placeholder="请输入法人代表" name="FrzzName"></input>
+				<input class="text-right" placeholder="请输入法人代表" name="FrzzName"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">成立日期</view>
 				<picker mode="date" :value="date" start="" end="" @change="DateChange" name="FoundedDate">
 					<view class="picker">
-						<text class="text-lg text-gray fl">{{date}}</text>
+						<text class="text-lg text-gray">{{date}}</text>
 					</view>
 				</picker>
 			</view>
@@ -37,7 +37,7 @@
 					<view class="flex-twice  margin-xs radius">
 						<picker mode="date" :value="startdate" start="" end="" @change="StartDateChange" name="BussinessTermFrom">
 							<view class="picker">
-								<text class="text-lg text-gray fl">{{startdate}}</text>
+								<text class="text-lg text-gray">{{startdate}}</text>
 							</view>
 						</picker>
 					</view>
@@ -45,7 +45,7 @@
 					<view class="flex-twice  margin-xs radius margin-left">
 						<picker mode="date" :value="enddate" start="" end="" @change="EndDateChange" name="BussinessTermTo">
 							<view class="picker">
-								<text class="text-lg text-gray fl">{{enddate}}</text>
+								<text class="text-lg text-gray">{{enddate}}</text>
 							</view>
 						</picker>
 					</view>
@@ -53,7 +53,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">发证单位</view>
-				<input placeholder="请输入发证单位" name="IssueOrg"></input>
+				<input class="text-right" placeholder="请输入发证单位" name="IssueOrg"></input>
 			</view>
 			<view class="cu-bar bg-white solid-top">
 				<view class="action text-black">
@@ -95,7 +95,7 @@
 			</view>
 			<!-- <button form-type="submit">Submit</button> -->
 			<view class="bg-white padding-lg solid-top">
-				<view class="btn-row"><button form-type="submit" class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;">提交</button></view>
+				<view class="btn-row"><button form-type="submit" class="cu-btn block bg-darkblue margin-tb-sm lg" >提交</button></view>
 			</view>
 		</form>
 	</view>
@@ -314,5 +314,8 @@
 	}
 	.cu-form-group uni-picker::after {
 		color: #ffffff;
+	}
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
 	}
 </style>

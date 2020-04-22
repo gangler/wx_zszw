@@ -5,11 +5,11 @@
 		<form @submit="formSubmit">
 			<view class="cu-form-group margin-top">
 				<view class="title">姓名</view>
-				<input placeholder="请输入姓名" name="p_name"></input>
+				<input class="text-right" placeholder="请输入姓名" name="p_name"></input>
 			</view>
 			<view class="cu-form-group solid-bottom">
 				<view class="title">身份证</view>
-				<input placeholder="请输入身份证" name="id_card"></input>
+				<input class="text-right" placeholder="请输入身份证" name="id_card"></input>
 			</view>
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -343,5 +343,8 @@
 		position: relative;
 		right: 28px;
 		/* top: -35px; */
+	}
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
 	}
 </style>

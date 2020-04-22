@@ -7,7 +7,8 @@
 			<view class="cu-item arrow" v-for="(item, index) in materialList" :index="index" :key="index" @click="getMaterialDetail(item.MATNAME, (type==0?item.EMPTYTABLEPATH:item.EXAMPLEPATH))">
 				<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 				<view class="content padding-left">
-					<view class="text-black"><view class="text-cut text-lg">{{item.MATNAME}}</view></view>
+					<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
+					<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS}}</view></view>
 					<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 				</view>
 			</view>
@@ -41,7 +42,7 @@
 			return {
 				flag: configService.format_type,
 				tableName: '办事空表',
-				affairId: 105,
+				affairId: 210,
 				materialList: [],
 				type: 0,
 			}
