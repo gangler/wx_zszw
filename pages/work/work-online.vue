@@ -8,7 +8,7 @@
 				<view class="title">—— 基础信息 ——</view>
 			</view>
 			<view class="cu-form-group flex justify-center">
-				<radio-group class="block" @change="RadioChange">
+				<radio-group class="" @change="RadioChange">
 					<radio class='radio text-df blue margin-sm' :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A">个人</radio>
 					<radio class='radio text-df blue margin-sm' :class="radio=='B'?'checked':''" :checked="radio=='B'?true:false" value="B">企业</radio>
 				</radio-group>
@@ -108,7 +108,7 @@
 			</view>
 			
 			<view class="cu-list menu">
-				<view class="cu-item" v-for="(item, index) in materialFilterList" :index="index" :key="index" >
+				<view class="cu-item" v-for="(item, index) in materialFilterList" :index="index" :key="index" @click="toUpload(item.MATGROUP, item.ID, item.MATNAME)">
 					<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 					<view class="content padding-left">
 						<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
@@ -116,10 +116,14 @@
 						<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 					</view>
 					<view class="action" v-if="item.MATGROUP != '0'">
-						<view class="cu-tag round bg-orange light">列表</view>
+						<view class="cu-tag round bg-white light">
+							<image src="/static/img/downfill.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
+						</view>
 					</view>
 					<view class="action" v-else>
-						<view class="cu-tag round bg-blue light">上传</view>
+						<view class="cu-tag round bg-white light">
+							<image src="/static/img/upload.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
+						</view>
 					</view>
 				</view>
 			<!-- 	<view class="cu-item arrow" v-for="(item, index) in matGroupIdList" :index="index" :key="index" v-if="item.MATINDEX.indexOf(matTypeId) != -1 && item.MATGROUP == '0'" >
@@ -137,6 +141,32 @@
 			</view>
 		</form>
 		
+		
+		<view class="cu-modal" :class="groupModal?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-darkblue justify-end">
+					<view class="content">请选择一种材料上传</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-white"></text>
+					</view>
+				</view>
+				<view class="cu-list menu">
+					<view class="cu-item" v-for="(item, index) in materialFilterList" :index="index" :key="index" v-if="item.MATGROUP != '0'" @click="toUpload('0', item.ID, item.MATNAME)">
+						<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
+						<view class="content">
+							<view class="text-black text-left"><view class="text-cut text-lg" style="width:200px">{{item.MATNAME}}</view></view>
+							<view class="text-gray text-left"> <view class="text-cut text-df" style="width:200px">{{item.REMARKS}}</view></view>
+							<view class="text-gray text-left"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
+						</view>
+						<view class="action" >
+							<view class="cu-tag round bg-white light">
+								<image src="/static/img/upload.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -165,7 +195,7 @@
 				flag: configService.format_type,
 				userId: 0,
 				radio: 'A',
-				affairId: 1,
+				affairId: 105,
 				affairCode: 'CGZ003',
 				townCode: 0,
 				objectTypeList: [],
@@ -180,7 +210,9 @@
 				date: '请选择出生日期',
 				ObjectId: 0,
 				matGroupIdList: [],
-				materialFilterList: []
+				materialFilterList: [],
+				groupModal: false,
+				
 				
 			}
 		},
@@ -271,7 +303,7 @@
 								}
 							}
 						})
-						// console.log(this.matGroupIdList)
+						console.log(this.materialFilterList)
 					},
 					fail: (res) => {
 						console.log(res)
@@ -306,6 +338,18 @@
 					content: msg,
 					showCancel: false
 				});
+			},
+			hideModal(e) {
+				this.groupModal = false
+			},
+			toUpload(group, id, name) {
+				if(group != '0') {
+					this.groupModal = true
+				}else {
+					uni.navigateTo({
+					    url: '../work/work-online-upload?matid=' + id + '&matname=' + name
+					});
+				}
 			},
 			// 表单提交
 			formSubmit(e) {

@@ -62,6 +62,9 @@
 		},
 		{
 			"path":"pages/work/work-online"
+		},
+		{
+			"path":"pages/work/work-online-upload"
 		}
 		
 	],
