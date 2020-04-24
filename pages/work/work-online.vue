@@ -7,12 +7,18 @@
 			<view class="cu-form-group bg-gray flex justify-center">
 				<view class="title">—— 基础信息 ——</view>
 			</view>
-			<view class="cu-form-group flex justify-center">
-				<radio-group class="" @change="RadioChange">
-					<radio class='radio text-df blue margin-sm' :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A">个人</radio>
-					<radio class='radio text-df blue margin-sm' :class="radio=='B'?'checked':''" :checked="radio=='B'?true:false" value="B">企业</radio>
-				</radio-group>
-			</view>
+			<radio-group class="block" @change="RadioChange">
+				<view class="cu-form-group flex justify-center">
+					<view>
+						<radio class='radio blue margin-sm' :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A"></radio>
+						<text class="text-df">个人</text>
+					</view>
+					<view>
+						<radio class='radio blue margin-sm' :class="radio=='B'?'checked':''" :checked="radio=='B'?true:false" value="B"></radio>
+						<text class="text-df">企业</text>
+					</view>
+				</view>
+			</radio-group>
 			<!-- 个人办事 -->
 			<view v-if="radio=='A'">
 				<view class="cu-form-group">
@@ -112,17 +118,23 @@
 					<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 					<view class="content padding-left">
 						<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
-						<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS}}</view></view>
+						<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS == null ? '' : item.REMARKS}}</view></view>
+						<view class="text-red text-sm flex"> <view class="text-cut text-df">{{item.REQUIRED == '是' ? '必须上传' : ''}}</view></view>
 						<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 					</view>
-					<view class="action" v-if="item.MATGROUP != '0'">
+					<view class="action" v-if="item.MATGROUP != '0' && item.uploaded == false">
 						<view class="cu-tag round bg-white light">
 							<image src="/static/img/downfill.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
 						</view>
 					</view>
-					<view class="action" v-else>
+					<view class="action" v-else-if="!item.uploaded">
 						<view class="cu-tag round bg-white light">
 							<image src="/static/img/upload.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
+						</view>
+					</view>
+					<view class="action" v-else>
+						<view class="cu-tag round bg-white light">
+							<image src="/static/img/true.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
 						</view>
 					</view>
 				</view>
@@ -151,16 +163,19 @@
 					</view>
 				</view>
 				<view class="cu-list menu">
-					<view class="cu-item" v-for="(item, index) in materialFilterList" :index="index" :key="index" v-if="item.MATGROUP != '0'" @click="toUpload('0', item.ID, item.MATNAME)">
+					<view class="cu-item" v-for="(item, index) in materialList" :index="index" :key="index" v-if="item.MATGROUP == currGroupId" @click="toUpload('0', item.ID, item.MATNAME)">
 						<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 						<view class="content">
 							<view class="text-black text-left"><view class="text-cut text-lg" style="width:200px">{{item.MATNAME}}</view></view>
-							<view class="text-gray text-left"> <view class="text-cut text-df" style="width:200px">{{item.REMARKS}}</view></view>
+							<view class="text-gray text-left"> <view class="text-cut text-df" style="width:200px">{{item.REMARKS == null ? '' : item.REMARKS}}</view></view>
 							<view class="text-gray text-left"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 						</view>
 						<view class="action" >
-							<view class="cu-tag round bg-white light">
+							<view class="cu-tag round bg-white light" v-if="uploadedMatIdList.indexOf(item.ID) == -1">
 								<image src="/static/img/upload.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
+							</view>
+							<view class="cu-tag round bg-white light" v-else>
+								<image src="/static/img/true.png" style="width: 30px;height: 30px;" class="png" mode="aspectFit"></image>
 							</view>
 						</view>
 					</view>
@@ -187,6 +202,9 @@
 			// if (option && option.IsNetAccepet) {
 			// 	this.IsNetAccepet = option.IsNetAccepet;
 			// }
+			this.getObjectTypeList()
+			this.getDocmentList()
+			this.getMaterialList()
 		},
 		components: {
 		},
@@ -206,21 +224,46 @@
 				perDocmentList: [],
 				bussDocmentList: [],
 				sexList: ["男","女"],
-				materialList: [],
+				materialList: [],// 所有材料列表
 				date: '请选择出生日期',
 				ObjectId: 0,
 				matGroupIdList: [],
-				materialFilterList: [],
+				materialFilterList: [],// 根据类型过滤后的材料列表
 				groupModal: false,
-				
-				
+				materialGroupModalList: [],// 弹窗中的材料列表
+				currGroupId: 0,// 当前弹窗的GroupId
+				uploadedMatIdList: []
 			}
 		},
 		onShow() {
-			this.getObjectTypeList()
-			this.getDocmentList()
-			this.getMaterialList()
-			this.newAffairCode()
+			let materialInfoList = uni.getStorageSync('material_info');
+			if(materialInfoList) {
+				let matObj = JSON.parse(materialInfoList)
+				console.log(matObj)
+				if(matObj.length > 0) {
+					this.uploadedMatIdList = []
+					matObj.forEach((val) => {
+						console.log(val)
+						this.uploadedMatIdList.push(val.MatID)
+						this.materialFilterList.forEach((kal) => {
+							if(kal.ID == val.MatID) {
+								kal.uploaded = true
+							}
+						})
+						const found = this.materialList.find(element => element.ID == val.MatID);
+						console.log(found);
+						if(found.MATGROUP != '0') {
+							this.materialFilterList.forEach((kal) => {
+								if(kal.MATGROUP == found.MATGROUP) {
+									kal.uploaded = true
+								}
+							})
+						}
+					})
+					console.log(this.materialFilterList)
+					console.log(this.uploadedMatIdList)
+				}
+			}
 		},
 		created() {
 			try {
@@ -230,6 +273,13 @@
 			        // console.log(userinfo);
 					this.userId = userinfo.userId
 			    }
+				uni.setStorage({
+				    key: 'material_info',
+				    data: '[]',
+				    success: function () {
+				        console.log('mat_storage init');
+				    }
+				});
 			} catch (e) {
 			    // error
 				console.log(e)
@@ -291,14 +341,18 @@
 						if(res.data.Result) {
 							this.materialList = res.data.Data
 						}
+						this.materialFilterList = []
+						this.matGroupIdList = []
 						this.materialList.forEach((val) => {
 							// 先根据材料类别筛选 this.matTypeId
 							// 在进行分组
 							if(val.MATGROUP == '0' && val.MATINDEX.indexOf(this.matTypeId) != -1) {
+								val['uploaded'] = false
 								this.materialFilterList.push(val)
 							}else {
 								if(this.matGroupIdList.indexOf(val.MATGROUP) == -1 && val.MATINDEX.indexOf(this.matTypeId) != -1) {
 									this.matGroupIdList.push(val.MATGROUP)
+									val['uploaded'] = false
 									this.materialFilterList.push(val)
 								}
 							}
@@ -345,6 +399,7 @@
 			toUpload(group, id, name) {
 				if(group != '0') {
 					this.groupModal = true
+					this.currGroupId = group
 				}else {
 					uni.navigateTo({
 					    url: '../work/work-online-upload?matid=' + id + '&matname=' + name
@@ -382,6 +437,18 @@
 				//     this.warnModel('请上传材料')
 				
 				} else {
+					// 必传材料校验
+					let requiredFlag = false
+					this.materialFilterList.forEach((val) => {
+						if(val.REQUIRED == '是' && val.uploaded == false) {
+							requiredFlag = true
+						}
+					})
+					if(requiredFlag) {
+						this.warnModel('请上传必须的材料')
+						return
+					}
+					
 					formdata.AffairCode = this.affairCode
 					formdata.AffairId = this.affairId
 					formdata.CurrAffairCode = this.newAffairCode();
@@ -395,26 +462,39 @@
 					formdata.TransTime = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
 					formdata.UserId = this.userId
 					// formdata.log_verify_code = this.log_verify_code
-					console.log(formdata)
-					// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
-					// uni.request({
-					// 	url: configService.apiUrl + '/gxfrTL/enterpriseAuthentication',
-					// 	method: 'POST',
-					// 	data: formdata,
-					// 	success: (res) => {
-					// 		console.log(res.data)
-					// 		if(res.data.code == "0") {
-					// 			if(res.data.data) {
-					// 				// console.log(res.data.data)
-					// 				// 成功
-					// 				uni.navigateBack()
-					// 			}
-					// 		}
-					// 	},
-					// 	fail: (res) => {
-					// 		console.log(res)
-					// 	}
-					// })
+					// console.log(formdata)
+					// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(formdata))
+					
+					let materialInfoList = uni.getStorageSync('material_info');
+					let matObj = JSON.parse(materialInfoList)
+					
+					let allInfo = JSON.stringify({
+					    'AffairInfo': formdata,
+					    'MaterialTakeInfoList': matObj
+					})
+					// console.log(allInfo)
+					
+					uni.request({
+						url: configService.apiUrl + '/gxfrTL/affairAcceptNew',
+						method: 'POST',
+						data: allInfo,
+						success: (res) => {
+							console.log(res.data)
+							if(res.data.Data) {
+								let resp = JSON.parse(res.data.Data)
+								if(resp.Result) {
+									console.log(resp)
+									// 提交成功
+									uni.reLaunch({
+										url: './index/index'
+									})
+								}
+							}
+						},
+						fail: (res) => {
+							console.log(res)
+						}
+					})
 				}
 			},
 			newAffairCode() {

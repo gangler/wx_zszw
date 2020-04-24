@@ -5,7 +5,7 @@
 		<form @submit="formSubmit">
 			<view class="cu-bar bg-white solid-top">
 				<view class="action text-black">
-					材料名称：
+					材料名称：{{matName}}
 				</view>
 			</view>
 			<view class="bg-white">
@@ -86,6 +86,16 @@
 					console.log("未登录")
 					
 				}
+				let materialInfoList = uni.getStorageSync('material_info');
+				if(!materialInfoList) {
+					uni.setStorage({
+					    key: 'material_info',
+					    data: '[]',
+					    success: function () {
+					        console.log('mat_storage init');
+					    }
+					});
+				}
 			} catch (e) {
 			    // error
 				console.log(e)
@@ -101,7 +111,7 @@
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					// sourceType: ['album'], //从相册选择
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (this.imgList.length != 0) {
 							this.imgList = this.imgList.concat(res.tempFilePaths)
 							this.imgFileList = this.imgFileList.concat(res.tempFiles)
@@ -109,7 +119,7 @@
 							this.imgList = res.tempFilePaths
 							this.imgFileList = res.tempFiles
 						}
-						// console.log(this.imgList)
+						console.log(this.imgList)
 						console.log(this.imgFileList)
 						// console.log(res.tempFilePaths);
 						// console.log(res.tempFiles)
@@ -145,32 +155,34 @@
 				})
 			},
 			uploadImg(index) {
+				// 显示上传提示框
 				// console.log(this.uploadedImgList)
 				if(this.isUploadList.indexOf(this.imgList[index]) != -1) {
 					return
 				}
 				let file = this.imgFileList[index]
 				console.log(file)
-				// let type = file.name.substring(file.name.indexOf('.')+1)
+				// console.log(file.path)
+				let type = file.path.substring(file.path.lastIndexOf('.')+1)
 				// console.log('type', type)
-				uni.request({
-					url: file.path, //v本地路径
-					method: 'GET',
-					responseType: 'arraybuffer',
-					success: res => {
-						let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
+				// 图片转base64上传
+				uni.getFileSystemManager().readFile({
+				    filePath: file.path, //选择图片返回的相对路径
+				    encoding: 'base64', //编码格式
+				    success: res => { //成功的回调
+				        // let base64 = 'data:image/jpeg;base64,' + res.data //不加上这串字符，在页面无法显示的哦
+						let base64 = res.data
 						// console.log(base64)
-						// 文件上传
 						uni.request({
 							url: configService.apiUrl + '/gxfrTL/uploadFileByBase64',
 							method: 'POST',
 							data: {
-								type: 'png',
+								type: type,
 								File: base64,
 								UserType: 2,
 							},
 							success: (res) => {
-								// console.log(res)
+								console.log(res)
 								if(res.data.Result) {
 									this.uploadedImgList[index] = res.data.Data
 									// console.log(this.uploadedImgList)
@@ -182,45 +194,83 @@
 								console.log(res)
 							}
 						})
+				    },
+					fail: res => {
+						console.log(res)
 					}
 				})
+				// 方法二不可用
+				// uni.request({
+				// 	url: file.path, //v本地路径
+				// 	// method: 'GET',
+				// 	responseType: 'arraybuffer',
+				// 	success: (res) => {
+				// 		let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
+				// 		console.log(base64)
+				// 		// 文件上传
+				// 		uni.request({
+				// 			url: configService.apiUrl + '/gxfrTL/uploadFileByBase64',
+				// 			method: 'POST',
+				// 			data: {
+				// 				type: type,
+				// 				File: base64,
+				// 				UserType: 2,
+				// 			},
+				// 			success: (res) => {
+				// 				console.log(res)
+				// 				if(res.data.Result) {
+				// 					this.uploadedImgList[index] = res.data.Data
+				// 					// console.log(this.uploadedImgList)
+				// 					this.isUploadList.push(this.imgList[index])
+				// 					// console.log(this.isUploadList)
+				// 				}
+				// 			},
+				// 			fail: (res) => {
+				// 				console.log(res)
+				// 			}
+				// 		})
+				// 	},
+				// 	fail: (res) => {
+				// 		console.log(res)
+				// 	}
+				// })
 			},
 			formSubmit() {
-				// this.MaterialTakeInfoList.push({
-				//     Copies: 1,
-				//     MatID: this.matId,
-				//     MaterialName: this.matName,
-				//     MaterialType: 5,
-				//     ReMark: "",
-				//     SavePath: this.uploadedImgList.join(','),
-				//     id: this.matId,
-				//     localPath: ""
-				// });
-				// console.log(this.MaterialTakeInfoList)
 				// 保存材料
 				let materialInfoList = uni.getStorageSync('material_info');
 				console.log(materialInfoList)
-				// if(materialInfoList) {
-					materialInfoList.push({
-						Copies: 1,
-						MatID: this.matId,
-						MaterialName: this.matName,
-						MaterialType: 5,
-						ReMark: "",
-						SavePath: this.uploadedImgList.join(','),
-						id: this.matId,
-						localPath: ""
-					})
-				// }else {
-					uni.setStorage({
-					    key: 'material_info',
-					    data: materialInfoList,
-					    success: function () {
-					        console.log('success');
-					    }
-					});
-				// }
-				
+				if(materialInfoList) {
+					let matObj = JSON.parse(materialInfoList)
+					console.log(matObj)
+					if(this.uploadedImgList.length > 0) {
+						matObj = matObj.concat({
+							Copies: 1,
+							MatID: this.matId,
+							MaterialName: this.matName,
+							MaterialType: 5,
+							ReMark: "",
+							SavePath: this.uploadedImgList.join(','),
+							id: this.matId,
+							localPath: ""
+						})
+						console.log(matObj)
+						uni.setStorage({
+							key: 'material_info',
+							data: JSON.stringify(matObj),
+							success: function () {
+								console.log('success');
+							}
+						});
+						uni.navigateBack({
+							delta: 1
+						})
+					}else {
+						uni.showModal({
+							content: '请上传材料',
+							showCancel: false
+						});
+					}
+				}
 				
 			}
 			

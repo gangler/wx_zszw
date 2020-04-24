@@ -8,7 +8,7 @@
 				<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
 				<view class="content padding-left">
 					<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
-					<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS}}</view></view>
+					<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS == null ? '' : item.REMARKS}}</view></view>
 					<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
 				</view>
 			</view>

@@ -66,11 +66,12 @@
 				        if (res.statusCode === 200) {
 				            console.log('下载成功');
 							console.log(res.tempFilePath)
-							this.saveFile(res.tempFilePath)
-							// uni.showModal({
-							// 	content: res.tempFilePath,
-							// 	showCancel: false
-							// });
+							this.saveFilePath = res.tempFilePath
+							// this.saveFile(res.tempFilePath)
+							uni.showModal({
+								content: '下载成功',
+								showCancel: false
+							});
 				        }
 				    },
 					fail: (res) => {
@@ -84,7 +85,8 @@
 					tempFilePath: src,
 					success: function (res) {
 						console.log('保存成功')
-						var savedFilePath = res.savedFilePath;
+						console.log(res)
+						let savedFilePath = res.savedFilePath;
 						uni.showModal({
 							content: savedFilePath,
 							showCancel: false
