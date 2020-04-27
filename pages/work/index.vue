@@ -48,7 +48,7 @@
 		<cu-custom bgColor="bg-darkblue" :isBack="false"><block slot="backText">返回</block><block slot="content">办事</block></cu-custom>
 		<view class="cu-bar bg-white solid-bottom">
 			<view class="action">
-				<text class="cuIcon-circlefill text-grey"></text>
+				<text class="cuIcon-hotfill text-grey"></text>
 				<text class="text-lg">事项列表</text> 
 			</view>
 		</view>
@@ -63,7 +63,7 @@
 		
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-circlefill text-grey"></text>
+				<text class="cuIcon-hotfill text-grey"></text>
 				<text class="text-lg">事项层级列表</text> 
 			</view>
 		</view>
@@ -77,7 +77,7 @@
 		
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-circlefill text-grey"></text>
+				<text class="cuIcon-hotfill text-grey"></text>
 				<text class="text-lg">直接网上办理事项</text> 
 			</view>
 		</view>
@@ -122,12 +122,12 @@
 			// 办事部门
 			getWorkList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_base_dic',
+					url: configService.apiUrl + '/get_base_dic',
 					success: (res) => {
 						// console.log(res.data)
 						let wlist = res.data.Data.D001
 						this.worklist = wlist
-						// console.log(this.worklist)
+						console.log(this.worklist)
 					}
 				})
 			},
@@ -140,7 +140,7 @@
 			//事项层级列表
 			getLevelList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_affair_level_type',
+					url: configService.apiUrl + '/get_affair_level_type',
 					data: {
 						userType: 2
 					},
@@ -162,7 +162,7 @@
 			//热门办理事项
 			getHotList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_hot_affairs',
+					url: configService.apiUrl + '/get_hot_affairs',
 					data: {
 						userType: 2
 					},

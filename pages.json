@@ -28,6 +28,9 @@
 			"path":"pages/news/index"
 		},
 		{
+			"path":"pages/news/news-list"
+		},
+		{
 			"path":"pages/news/news-detail"
 		},
 		{
@@ -65,6 +68,9 @@
 		},
 		{
 			"path":"pages/work/work-online-upload"
+		},
+		{
+			"path":"pages/user/service/service-detail"
 		}
 		
 	],

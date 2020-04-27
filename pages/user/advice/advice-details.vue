@@ -66,7 +66,7 @@
 			getAdviceDetail() {
 				// /GetConsultAnswerByID?USERID=17&ConsultId=21
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/GetConsultAnswerByID',
+					url: configService.apiUrl + '/GetConsultAnswerByID',
 					method: 'POST',
 					data: {
 						USERID: this.userId,

@@ -41,6 +41,12 @@
 				<view class="btn-row"><button form-type="submit" class="cu-btn block bg-darkblue margin-tb-sm lg" >确定</button></view>
 			</view>
 		</form>
+		
+		<view class="cu-load load-modal" v-if="loadModal">
+			<!-- <view class="cuIcon-emojifill text-orange"></view> -->
+			<!-- <image src="/static/logo.png" mode="aspectFit"></image> -->
+			<view class="gray-text">图片上传中...</view>
+		</view>
 	</view>
 </template>
 
@@ -72,6 +78,7 @@
 				MaterialTakeInfoList: [],
 				matId: 0,
 				matName: '',
+				loadModal: false,
 				
 			};
 		},
@@ -156,6 +163,7 @@
 			},
 			uploadImg(index) {
 				// 显示上传提示框
+				this.loadModal = true
 				// console.log(this.uploadedImgList)
 				if(this.isUploadList.indexOf(this.imgList[index]) != -1) {
 					return
@@ -174,7 +182,7 @@
 						let base64 = res.data
 						// console.log(base64)
 						uni.request({
-							url: configService.apiUrl + '/gxfrTL/uploadFileByBase64',
+							url: configService.apiUrl + '/uploadFileByBase64',
 							method: 'POST',
 							data: {
 								type: type,
@@ -188,18 +196,22 @@
 									// console.log(this.uploadedImgList)
 									this.isUploadList.push(this.imgList[index])
 									// console.log(this.isUploadList)
+									this.loadModal = false
 								}
 							},
 							fail: (res) => {
 								console.log(res)
+								this.loadModal = false
 							}
 						})
 				    },
 					fail: res => {
 						console.log(res)
+						this.loadModal = false
 					}
 				})
-				// 方法二不可用
+				
+				/* 方法二不可用
 				// uni.request({
 				// 	url: file.path, //v本地路径
 				// 	// method: 'GET',
@@ -209,7 +221,7 @@
 				// 		console.log(base64)
 				// 		// 文件上传
 				// 		uni.request({
-				// 			url: configService.apiUrl + '/gxfrTL/uploadFileByBase64',
+				// 			url: configService.apiUrl + '/uploadFileByBase64',
 				// 			method: 'POST',
 				// 			data: {
 				// 				type: type,
@@ -234,6 +246,7 @@
 				// 		console.log(res)
 				// 	}
 				// })
+				*/
 			},
 			formSubmit() {
 				// 保存材料
@@ -272,7 +285,8 @@
 					}
 				}
 				
-			}
+			},
+			
 			
 		}
 	

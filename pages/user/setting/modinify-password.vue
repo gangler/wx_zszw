@@ -119,7 +119,7 @@ export default {
 			// console.log(encryPwd)
 			// console.log(encryNewPwd)
 			uni.request({
-				url: configService.apiUrl + '/gxfrTL/changePassword',
+				url: configService.apiUrl + '/changePassword',
 				data: {
 				    password: encryPwd,
 				    newPassword: encryNewPwd,

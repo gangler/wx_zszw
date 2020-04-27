@@ -5,7 +5,7 @@
 		<scroll-view scroll-y class="scrollPage">
 			<view class="cu-list menu" >
 				<view class="cu-item arrow" @click="myPwd">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content">
 						<image src="/static/img/security.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -14,7 +14,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="myPerson">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content">
 						<image src="/static/img/user.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view><text class="text-blue margin-right-xs"></text> 个人实名认证</view>
@@ -27,7 +27,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="myCompany">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content">
 						<image src="/static/img/company.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -85,7 +85,7 @@
 			getUserState() {
 				if(this.mobile != '') {
 					uni.request({
-						url: configService.apiUrl + '/gxfrTL/getState',
+						url: configService.apiUrl + '/getState',
 						data: {
 							mobile: this.mobile,
 						},

@@ -25,7 +25,7 @@
 			</view> -->
 			<view class="cu-list menu" >
 				<view class="cu-item arrow" @click="myService">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/service.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -34,7 +34,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="myAdvice">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/advice.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -43,7 +43,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="mySetting">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/setting.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -114,7 +114,7 @@
 			</view>
 			<view class="cu-list menu" >
 				<view class="cu-item arrow" @click="myService">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/service2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -123,7 +123,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="myAdvice">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/advice2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>
@@ -132,7 +132,7 @@
 					</button>
 				</view>
 				<view class="cu-item arrow" @click="mySetting">
-					<button class="cu-btn content" open-type="contact">
+					<button class="cu-btn content" >
 						<image src="/static/img/setting2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
 							<view>

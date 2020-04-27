@@ -84,7 +84,7 @@
 			//从办事部门跳转
 			getDepartmentList(val) {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_affairs',
+					url: configService.apiUrl + '/get_affairs',
 					data: {
 						type: 0,
 						ContentCode: val
@@ -100,7 +100,7 @@
 			//从事项层级跳转
 			getLevelList(val) {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_affairs_by_level',
+					url: configService.apiUrl + '/get_affairs_by_level',
 					data: {
 						ContentCode: val,
 						AffairLevel: this.level,
@@ -117,7 +117,7 @@
 			// 办事部门
 			getWorkList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_base_dic',
+					url: configService.apiUrl + '/get_base_dic',
 					success: (res) => {
 						// console.log(res.data)
 						let wlist = res.data.Data.D001
@@ -192,7 +192,7 @@
 
 	// function getSelectedList() {
 	// 	$.ajax({
-	// 		url: configService.apiUrl + '/gxfrTL/get_base_dic',
+	// 		url: configService.apiUrl + '/get_base_dic',
 	// 		success: function (res) {
 	// 			var html = '';
 

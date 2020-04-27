@@ -104,7 +104,7 @@
 				// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/AddConsult',
+					url: configService.apiUrl + '/AddConsult',
 					method: 'POST',
 					data: formdata,
 					success: (res) => {

@@ -50,7 +50,7 @@
 			//从新闻列表跳转
 			getNewsInformation(val) {
 				uni.request({
-					url: configService.apiUrl + '/gxsdapi/get_information',
+					url: configService.apiUrl + '/get_information',
 					data: {
 						information_id: val,
 						UserType: 2

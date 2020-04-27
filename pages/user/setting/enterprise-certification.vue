@@ -178,7 +178,7 @@
 								// console.log(base64)
 								// 文件上传
 								uni.request({
-									url: configService.apiUrl + '/gxfrTL/uploadFile',
+									url: configService.apiUrl + '/uploadFile',
 									method: 'POST',
 									data: {
 										GuId: '',
@@ -258,7 +258,7 @@
 					console.log(formdata)
 					// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 					uni.request({
-						url: configService.apiUrl + '/gxfrTL/enterpriseAuthentication',
+						url: configService.apiUrl + '/enterpriseAuthentication',
 						method: 'POST',
 						data: formdata,
 						success: (res) => {

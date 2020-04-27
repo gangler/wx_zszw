@@ -42,7 +42,7 @@
 			return {
 				flag: configService.format_type,
 				tableName: '办事空表',
-				affairId: 210,
+				affairId: 1,
 				materialList: [],
 				type: 0,
 			}
@@ -56,7 +56,7 @@
 			//材料列表
 			getMaterialList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/getMaterialsDetailsByAffairId',
+					url: configService.apiUrl + '/getMaterialsDetailsByAffairId',
 					method: 'POST',
 					data: {
 						AffairId: this.affairId,

@@ -72,7 +72,7 @@
 		methods: {
 			getAdviceList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/GetMyConsult',
+					url: configService.apiUrl + '/GetMyConsult',
 					method: 'POST',
 					data: {
 						USERID: this.userId,
@@ -94,7 +94,7 @@
 			getAdviceDetail(id, state) {
 				if(state == 1) {
 					uni.navigateTo({
-						///gxfrTL/GetConsultAnswerByID?USERID=17&ConsultId=21
+						///GetConsultAnswerByID?USERID=17&ConsultId=21
 						url: '../user/advice/advice-details?USERID=' + this.userId + '&ConsultId=' + id
 					});
 				}else {
@@ -106,7 +106,7 @@
 			},
 			addNewAdvice() {
 				uni.navigateTo({
-					///gxfrTL/GetConsultAnswerByID?USERID=17&ConsultId=21
+					///GetConsultAnswerByID?USERID=17&ConsultId=21
 					url: '../user/advice/advice-add'
 				});
 			},

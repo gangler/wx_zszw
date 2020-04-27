@@ -289,7 +289,7 @@
 			//材料类别列表
 			getObjectTypeList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/getMaterialsByObject',
+					url: configService.apiUrl + '/getMaterialsByObject',
 					method: 'POST',
 					data: {
 						AffairId: this.affairId,
@@ -309,7 +309,7 @@
 			// 证件类型列表
 			getDocmentList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/get_base_dic',
+					url: configService.apiUrl + '/get_base_dic',
 					success: (res) => {
 						// console.log(res.data)
 						let doclist = res.data.Data.D999
@@ -330,7 +330,7 @@
 			//材料列表
 			getMaterialList() {
 				uni.request({
-					url: configService.apiUrl + '/gxfrTL/getMaterialsDetailsByAffairId',
+					url: configService.apiUrl + '/getMaterialsDetailsByAffairId',
 					method: 'POST',
 					data: {
 						AffairId: this.affairId,
@@ -475,7 +475,7 @@
 					// console.log(allInfo)
 					
 					uni.request({
-						url: configService.apiUrl + '/gxfrTL/affairAcceptNew',
+						url: configService.apiUrl + '/affairAcceptNew',
 						method: 'POST',
 						data: allInfo,
 						success: (res) => {

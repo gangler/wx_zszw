@@ -113,7 +113,7 @@ export default {
 			// console.log(encryPwd)
 			let obj = {username: this.account, password: encryPwd}
 			uni.request({
-				url: configService.apiUrl + '/gxfrTL/login',
+				url: configService.apiUrl + '/login',
 				data: obj,
 				success: (res) => {
 					console.log(res.data)
