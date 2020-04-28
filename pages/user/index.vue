@@ -239,8 +239,9 @@
 				    // error
 					console.log(e)
 				}
+				this.modalVisible = false
 				uni.reLaunch({
-					url: '/pages/user/index'
+					url: '/pages/index/index'
 				});
 			},
 			toLogin() {

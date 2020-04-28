@@ -5,20 +5,28 @@
 		
 		<view class="cu-form-group margin-top">
 			<view class="title">咨询时间</view>
-			<input placeholder="" disabled :value="adviceDetail ? adviceDetail.ADVICETIME.replace('T', ' ') : ''"></input>
+			<input disabled :value="adviceDetail ? adviceDetail.ADVICETIME.replace('T', ' ') : ''"></input>
 		</view>
-		<view class="cu-form-group align-start">
+		<view class="cu-form-group flex align-start">
 			<view class="title">咨询内容</view>
-			<textarea maxlength="-1" disabled placeholder="" :value="adviceDetail ? adviceDetail.CONTENT : ''"></textarea>
+			<textarea maxlength="-1" disabled :value="adviceDetail ? adviceDetail.CONTENT : ''"></textarea>
 		</view>
+	<!-- 	<view class="cu-form-group align-start">
+			<view class="title">咨询内容</view>
+			<textarea maxlength="-1" disabled :value="adviceDetail ? adviceDetail.CONTENT : ''"></textarea>
+		</view> -->
 		<view class="cu-form-group">
 			<view class="title">回复时间</view>
-			<input placeholder="" disabled :value="adviceDetail ? adviceDetail.ANSWERTIME.replace('T', ' ') : ''"></input>
+			<input disabled :value="adviceDetail ? adviceDetail.ANSWERTIME.replace('T', ' ') : ''"></input>
 		</view>
-		<view class="cu-form-group align-start">
+		<view class="cu-form-group flex align-start">
 			<view class="title">回复内容</view>
-			<textarea maxlength="-1" disabled placeholder="" :value="adviceDetail ? adviceDetail.ANSWERS : ''"></textarea>
+			<textarea maxlength="-1" disabled :value="adviceDetail ? adviceDetail.ANSWERS : ''"></textarea>
 		</view>
+		<!-- <view class="cu-form-group align-start">
+			<view class="title">回复内容</view>
+			<textarea maxlength="-1" disabled :value="adviceDetail ? adviceDetail.ANSWERS : ''"></textarea>
+		</view> -->
 	</view>
 </template>
 

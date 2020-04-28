@@ -485,8 +485,9 @@
 								if(resp.Result) {
 									console.log(resp)
 									// 提交成功
+									this.warnModel('提交成功')
 									uni.reLaunch({
-										url: './index/index'
+										url: '/pages/index/index'
 									})
 								}
 							}

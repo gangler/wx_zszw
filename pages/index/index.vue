@@ -45,9 +45,22 @@ export default {
 			PageCur: 'mrxc'
 		};
 	},
+	onShow() {
+		const currpage = uni.getStorageSync('curr_page');
+		if(currpage) {
+			this.PageCur = currpage
+		}
+	},
 	methods: {
 		NavChange: function(e) {
 			this.PageCur = e.currentTarget.dataset.cur;
+			uni.setStorage({
+			    key: 'curr_page',
+			    data: this.PageCur,
+			    success: function () {
+			        console.log('set curr_page');
+			    }
+			});
 		}
 	}
 };
