@@ -51,6 +51,9 @@
 				<text class="cuIcon-hotfill text-grey"></text>
 				<text class="text-lg">事项列表</text> 
 			</view>
+			<view class="action">
+				<button class="cu-btn bg-white text-blue text-lg" @click="toSearch()" >搜索</button>
+			</view>
 		</view>
 		<view class="cu-list grid col-3 no-border" >
 			<view class="cu-item" v-for="(item, index) in worklist" :index="index" :key="index">
@@ -127,7 +130,7 @@
 						// console.log(res.data)
 						let wlist = res.data.Data.D001
 						this.worklist = wlist
-						console.log(this.worklist)
+						// console.log(this.worklist)
 					}
 				})
 			},
@@ -170,7 +173,7 @@
 						// console.log(res.data)
 						let wlist = res.data.Data
 						this.hotlist = wlist
-						// console.log(this.hotlist)
+						console.log(this.hotlist)
 					}
 				})
 			},
@@ -180,8 +183,13 @@
 				    url: '../shared/pdf?Affairid=' + item.Affairid 
 						+ '&AffairCode=' + item.AffairCode 
 						+ '&AffairName=' + item.AffairName 
-						+ '&IsNetAccepet=' + item.IsNetAccepet 
+						+ '&IsNetAccepet=3'
 						
+				});
+			},
+			toSearch() {
+				uni.navigateTo({
+				    url: '../work/work-search'
 				});
 			},
 			upper: function(e) {

@@ -29,8 +29,9 @@
 		
 		<view class="cu-list menu">
 			<view class="cu-item arrow" v-for="(item, index) in departmentlist" :index="index" :key="index">
-				<view class="content" @click="departOnClick(item)">
-					<text class="">{{item.AffairName}}</text>
+				<view class="content flex" @click="departOnClick(item)">
+					<image src="/static/img/computer.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit" v-if="item.IsNetAccepet == 3"></image>
+					<view class="flex-sub">{{item.AffairName}}</view>
 				</view>
 			</view>
 		</view>
@@ -93,7 +94,7 @@
 						// console.log(res.data)
 						let wlist = res.data.Data
 						this.departmentlist = wlist
-						// console.log(this.departmentlist)
+						console.log(this.departmentlist)
 					}
 				})
 			},

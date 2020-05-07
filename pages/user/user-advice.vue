@@ -10,7 +10,7 @@
 					<view class="cu-item arrow" v-for="(item, index) in adviceList" :index="index" :key="index" @click="getAdviceDetail(item.ID, item.STATE)" >
 						<view class="content padding-tb-sm">
 							<view class="margin-xs">
-								<text class="text-blue text-bold text-xl margin-right-xs">{{item.CONTENT}}</text>
+								<text class="text-blue text-bold text-xl margin-right-xs text-cut" style="width:220px">{{item.CONTENT}}</text>
 							</view>
 							<view class="text-gray text-sm margin-xs flex">
 								<text class="flex-sub margin-right-xs">编号：{{index+1}}</text>

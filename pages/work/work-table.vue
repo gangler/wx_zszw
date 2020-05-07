@@ -2,18 +2,22 @@
 	<view>
 		<cu-custom v-if="flag == 1" bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">{{tableName}}</block></cu-custom>
 		<cu-custom v-else-if="flag == 2" bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">{{tableName}}</block></cu-custom>
-		
-		<view class="cu-list menu">
-			<view class="cu-item arrow" v-for="(item, index) in materialList" :index="index" :key="index" @click="getMaterialDetail(item.MATNAME, (type==0?item.EMPTYTABLEPATH:item.EXAMPLEPATH))">
-				<image src="@/static/img/pdf.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
-				<view class="content padding-left">
-					<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
-					<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS == null ? '' : item.REMARKS}}</view></view>
-					<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
+		<view v-for="(item2, index2) in objectTypeList" :index="index2" :key="index2">
+			<view class="margin-xs padding-left">
+				<text class="text-lg text-blue">{{item2.OBJNAME}}</text> 
+			</view>
+			<view class="cu-list menu">
+				<view class="cu-item arrow" v-if="item.MATINDEX.indexOf(item2.OBJINDEX) != -1" v-for="(item, index) in materialList" :index="index" :key="index" @click="getMaterialDetail(item.MATNAME, (type==0?item.EMPTYTABLEPATH:item.EXAMPLEPATH))">
+					<image v-if="item.existed" src="@/static/img/pdf1.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
+					<image v-else src="@/static/img/pdf2.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit"></image>
+					<view class="content padding-left">
+						<view class="text-black"><view class="text-cut text-lg" style="width:220px">{{item.MATNAME}}</view></view>
+						<view class="text-gray text-sm flex"> <view class="text-cut text-df" style="width:220px">{{item.REMARKS == null ? '' : item.REMARKS}}</view></view>
+						<view class="text-gray text-sm flex"> <view class="text-cut text-df">收{{item.MATNUMBER}}份</view></view>
+					</view>
 				</view>
 			</view>
 		</view>
-		
 	</view>
 </template>
 
@@ -44,11 +48,13 @@
 				tableName: '办事空表',
 				affairId: 1,
 				materialList: [],
+				objectTypeList: [],
 				type: 0,
 			}
 		},
 		onShow() {
 			this.getMaterialList()
+			this.getObjectTypeList()
 		},
 		created() {
 		},
@@ -63,9 +69,46 @@
 						UserType: 2
 					},
 					success: (res) => {
-						console.log(res.data)
+						// console.log(res.data)
 						if(res.data.Result) {
 							this.materialList = res.data.Data
+						}
+						
+						this.materialList.forEach((val) => {
+							if(this.type == 0) { //空表
+								if(val.EMPTYTABLEPATH) {
+									val.existed = true
+								}else{
+									val.existed = false
+								}
+							}else {//样表
+								if(val.EXAMPLEPATH) {
+									val.existed = true
+								}else{
+									val.existed = false
+								}
+							}
+						})
+						console.log(this.materialList)
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
+			},
+			//材料类别列表
+			getObjectTypeList() {
+				uni.request({
+					url: configService.apiUrl + '/getMaterialsByObject',
+					method: 'POST',
+					data: {
+						AffairId: this.affairId,
+						UserType: 2
+					},
+					success: (res) => {
+						console.log(res.data)
+						if(res.data.Result) {
+							this.objectTypeList = res.data.Data
 						}
 					},
 					fail: (res) => {

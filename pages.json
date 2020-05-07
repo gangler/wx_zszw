@@ -71,6 +71,9 @@
 		},
 		{
 			"path":"pages/user/service/service-detail"
+		},
+		{
+			"path":"pages/work/work-search"
 		}
 		
 	],

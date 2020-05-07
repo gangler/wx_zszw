@@ -131,9 +131,9 @@ export default {
 						    }
 						});
 						// 跳转到首页
-						uni.navigateTo({
-							url: '../index/index'
-						})
+						uni.reLaunch({
+							url: '/pages/index/index'
+						});
 					}else{
 						this.loadModal = false
 						this.isError = true

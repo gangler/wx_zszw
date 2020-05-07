@@ -182,6 +182,27 @@
 				</view>
 			</view>
 		</view>
+		
+		<view class="cu-modal" :class="modalVisible ? 'show' : ''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">提示</view>
+				<!-- 	<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view> -->
+				</view>
+				<view class="padding-xl text-lg">
+					请先登录
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<!-- <button class="cu-btn line-blue text-blue" @tap="hideModal">取消</button> -->
+						<button class="cu-btn bg-red margin-left" @tap="confirmToLogin">确定</button>
+			
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -211,6 +232,7 @@
 		data() {
 			return {
 				flag: configService.format_type,
+				modalVisible: false,
 				userId: 0,
 				radio: 'A',
 				affairId: 105,
@@ -272,7 +294,9 @@
 					// this.isLogin = true
 			        // console.log(userinfo);
 					this.userId = userinfo.userId
-			    }
+			    }else {
+					this.modalVisible = true
+				}
 				uni.setStorage({
 				    key: 'material_info',
 				    data: '[]',
@@ -405,6 +429,19 @@
 					    url: '../work/work-online-upload?matid=' + id + '&matname=' + name
 					});
 				}
+			},
+			confirmToLogin() {
+				this.modalVisible = false
+				uni.setStorage({
+				    key: 'curr_page',
+				    data: 'grzx',
+				    success: function () {
+				        console.log('set curr_page');
+				    }
+				});
+				uni.reLaunch({
+					url: '/pages/index/index'
+				});
 			},
 			// 表单提交
 			formSubmit(e) {
