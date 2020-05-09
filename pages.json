@@ -74,6 +74,12 @@
 		},
 		{
 			"path":"pages/work/work-search"
+		},
+		{
+			"path":"pages/login/forget-password"
+		},
+		{
+			"path":"pages/login/regist"
 		}
 		
 	],

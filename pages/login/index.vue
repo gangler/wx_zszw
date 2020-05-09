@@ -24,7 +24,7 @@
 	</view>
 	
 	
-	<view class="content2" v-else-if="flag === 2">
+	<view class="content2 bg-white" v-else-if="flag === 2">
 		<cu-custom bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">登录</block></cu-custom>
 		<!-- <image src="../../static/img/bg.jpg" mode=""></image> -->
 		<view class="login-content">
@@ -52,11 +52,26 @@
 				</view>
 				<view class="flex-sub">
 					<view class="flex justify-end padding-xs">
-						<text class="text-black text-df">忘记密码</text>
+						<text class="text-black text-df" @click="toForgetPage">忘记密码</text>
 					</view>
 				</view>
 			</view>
 			<view class="btn-row"><button class="cu-btn block bg-blue margin-tb-sm lg" style="background-color: #215D80;" @tap="bindLogin">登录</button></view>
+			<view class="padding-xs">
+				<view class="flex justify-center">
+					<text class="text-black text-lg padding-sm" @click="toRegistPage">新用户注册</text>
+				</view>
+			</view>
+			<view class="padding-xs margin-top">
+				<view class="flex justify-center">
+					<text class="text-grey text-df">———————— or ————————</text>
+				</view>
+			</view>
+			<view class="cu-list grid col-2 no-border" >
+				<view class="cu-item align-center">
+					<image src="@/static/img/wechat.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit" @click="wechatLogin"></image>
+				</view>
+			</view>
 			<!-- <view class="login-type" @tap="changeLoginType">{{ loginType ? '手机密码登录' : '用户密码登录' }} ></view> -->
 		</view>
 		<view class="cu-load load-modal" v-if="loadModal">
@@ -173,6 +188,25 @@ export default {
 		},
 		closeErrModel() {
 			this.isError = false;
+		},
+		wechatLogin() {
+			uni.login({
+			  provider: 'weixin',
+			  success: function (loginRes) {
+				  console.log(loginRes);
+			    console.log(loginRes.authResult);
+			  }
+			});
+		},
+		toForgetPage() {
+			uni.navigateTo({
+				url: '/pages/login/forget-password'
+			})
+		},
+		toRegistPage() {
+			uni.navigateTo({
+				url: '/pages/login/regist'
+			})
 		}
 	},
 	onReady() {
