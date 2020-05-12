@@ -69,7 +69,9 @@
 			</view>
 			<view class="cu-list grid col-2 no-border" >
 				<view class="cu-item align-center">
-					<image src="@/static/img/wechat.png" class="cu-avatar lg margin-top margin-bottom bg-white" mode="aspectFit" @click="wechatLogin"></image>
+					<button class="cu-btn round margin-top margin-bottom bg-white" open-type="getUserInfo" @click="wechatLogin">
+						<image src="@/static/img/wechat.png" class="cu-avatar lg bg-white" mode="aspectFit" ></image>
+					</button>
 				</view>
 			</view>
 			<!-- <view class="login-type" @tap="changeLoginType">{{ loginType ? '手机密码登录' : '用户密码登录' }} ></view> -->
@@ -190,11 +192,70 @@ export default {
 			this.isError = false;
 		},
 		wechatLogin() {
+			this.loadModal = true
+			const that = this
+			// console.log(that)
 			uni.login({
 			  provider: 'weixin',
 			  success: function (loginRes) {
-				  console.log(loginRes);
-			    console.log(loginRes.authResult);
+				console.log(loginRes);
+			    console.log(loginRes.code);
+				if(!loginRes.code){
+					return
+				}
+				uni.request({
+					url: configService.apiUrl + '/wechatMiniProgramLogin',
+					method: 'GET',
+					data: {
+						code: loginRes.code
+					},
+					success: (res) => {
+						console.log(res.data)
+						if(res.data.data) {
+							// 成功
+							let userinfo = res.data.data
+							console.log('微信登录成功')
+							// this.isError = false
+							// this.loadModal = false
+							// 保存用户信息
+							uni.setStorage({
+							    key: 'user_info',
+							    data: userinfo,
+							    success: function () {
+							        console.log('success');
+									// 跳转到首页
+									uni.reLaunch({
+										url: '/pages/index/index'
+									});
+							    }
+							});
+						}else{
+							console.log(res.data.message)
+							// this.loadModal = false
+							that.loadModal = false
+							// 获取用户信息
+							uni.getUserInfo({
+							  provider: 'weixin',
+							  success: function (infoRes) {
+								console.log(infoRes);
+								console.log('用户昵称为：' + infoRes.userInfo.nickName);
+								// 跳转到 微信登录绑定页
+								uni.navigateTo({
+									url: '/pages/login/wechat/wechat-login?openid=' + res.data.openid 
+									+ '&nickName=' + infoRes.userInfo.nickName
+									+ '&avatarUrl=' + infoRes.userInfo.avatarUrl
+									+ '&gender=' + infoRes.userInfo.gender
+								})
+							  }
+							});
+							
+						}
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
+				
 			  }
 			});
 		},

@@ -163,18 +163,19 @@
 						}
 						// console.log(this.imgList)
 						// console.log(res.tempFilePaths);
-						// console.log(res.tempFiles)
+						console.log(res.tempFiles)
 						let file = res.tempFiles[0]
 						// console.log(file.name)
-						let type = file.name.substring(file.name.indexOf('.')+1)
+						// let type = file.name.substring(file.name.indexOf('.')+1)
+						// 微信小程序中没有name
+						let type = file.path.substring(file.path.lastIndexOf('.')+1)
 						// console.log('type', type)
-						uni.request({
-							url: res.tempFilePaths[0], //v本地路径
-							method: 'GET',
-							responseType: 'arraybuffer',
-							success: res => {
-								let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
-								// base64 ='data:image/jpeg;base64,'+base64 //不加上这串字符，在页面无法显示
+						uni.getFileSystemManager().readFile({
+						    filePath: file.path, //选择图片返回的相对路径
+						    encoding: 'base64', //编码格式
+						    success: res => { //成功的回调
+						        // let base64 = 'data:image/jpeg;base64,' + res.data //不加上这串字符，在页面无法显示的哦
+								let base64 = res.data
 								// console.log(base64)
 								// 文件上传
 								uni.request({
@@ -191,7 +192,7 @@
 										if(res.data.code == "0") {
 											if(res.data.data != "") {
 												// console.log(res.data.data)
-												this.ImageUrl3 = configService.apiUrl + res.data.data
+												this.ImageUrl3 = configService.imgUrl + res.data.data
 											}
 										}
 									},

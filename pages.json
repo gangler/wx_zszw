@@ -80,6 +80,9 @@
 		},
 		{
 			"path":"pages/login/regist"
+		},
+		{
+			"path":"pages/login/wechat/wechat-login"
 		}
 		
 	],

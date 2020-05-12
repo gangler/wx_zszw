@@ -7,6 +7,7 @@
 			<view class="cu-form-group margin-top">
 				<view class="title">手机号：</view>
 				<input placeholder="请输入手机号" @input="InputChange" name="mobile"></input>
+				<text class="text-df text-red">{{mobileCheckStr}}</text>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">密码：</view>
@@ -19,7 +20,9 @@
 			</view>
 			<!-- <button form-type="submit">Submit</button> -->
 			<view class="bg-white padding-lg solid-top">
-				<view class="btn-row"><button form-type="submit" class="cu-btn block bg-darkblue margin-tb-sm lg" >注册</button></view>
+				<view class="btn-row">
+					<button :disabled="btnAbled" form-type="submit" class="cu-btn block bg-darkblue margin-tb-sm lg" >注册</button>
+				</view>
 			</view>
 		</form>
 		
@@ -33,7 +36,7 @@
 					</view>
 				</view>
 				<view class="padding-xl text-lg">
-					修改成功
+					注册成功
 				</view>
 				<view class="cu-bar bg-white">
 					<view class="action margin-0 flex-sub  solid-left" @tap="hideModal">确定</view>
@@ -59,7 +62,10 @@ export default {
 			countdown: 60,
 			verifyStr: '获取验证码',
 			verifyAbled: false,
-			successModal: false
+			btnAbled: false,
+			successModal: false,
+			mobileCheckStr: '',
+			
 		};
 	},
 	methods: {
@@ -77,7 +83,7 @@ export default {
 				method: 'POST',
 				data: {
 					mobile: this.mobilePhone,
-					type: 0
+					type: -1
 				},
 				success: (res) => {
 					console.log(res.data)
@@ -114,14 +120,21 @@ export default {
 			let formdata = e.detail.value
 			console.log(formdata)
 			
+			if(!mobileFormatCheck(this.mobilePhone)){
+				this.warnModel('请填写正确的手机号')
+				return
+			}
+			
 			if (formdata.mobile == '') {
 			    this.warnModel('请输入手机号')
 			} else if (formdata.password == '') {
-			    this.warnModel('请输入新密码')
+			    this.warnModel('请输入密码')
 			} else if (formdata.verify_code == '') {
 			    this.warnModel('请输入验证码')
 			} else {
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
+				let encryPwd = md5(configService.encry_string + formdata.password)
+				formdata.password = encryPwd
+				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(formdata))
 				uni.request({
 					url: configService.apiUrl + '/register',
 					method: 'POST',
@@ -150,6 +163,36 @@ export default {
 		},
 		InputChange(e) {
 			this.mobilePhone = e.detail.value
+			this.mobileCheckStr = ''
+			this.verifyAbled = false
+			this.btnAbled = false
+			if(mobileFormatCheck(this.mobilePhone)){
+				uni.request({
+					url: configService.apiUrl + '/CheckMobileExist',
+					method: 'POST',
+					data: {
+						mobile: this.mobilePhone,
+					},
+					success: (res) => {
+						console.log(res.data)
+						if(res.data.Result) {
+							// 成功
+							console.log(res.data.Message)
+							this.mobileCheckStr = '账号已注册，请直接登录'
+							this.verifyAbled = true
+							this.btnAbled = true
+						}else{
+							// 用户不存在
+							console.log(res.data.Message)
+							// this.mobileCheckStr = '该用户不存在'
+							// this.verifyAbled = true
+						}
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
+			}
 		},
 		hideModal() {
 			uni.navigateBack({
