@@ -52,7 +52,7 @@
 				<text class="text-lg">事项列表</text> 
 			</view>
 			<view class="action">
-				<button class="cu-btn bg-white text-blue text-lg" @click="toSearch()" >搜索</button>
+				<button class="cu-btn bg-white text-blue text-lg" @click="toSearch()" ><text class="cuIcon-search"></text> 搜索</button>
 			</view>
 		</view>
 		<view class="cu-list grid col-3 no-border" >

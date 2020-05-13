@@ -137,6 +137,27 @@
 					this.isLogin = true
 			        console.log(userinfo);
 					this.log_verify_code = userinfo.log_verify_code
+					uni.request({
+						url: configService.apiUrl + '/CheckLoginState',
+						data: {
+						    log_verify_code: this.log_verify_code,
+						},
+						success: (res) => {
+							console.log(res)
+							if(res.data.Result) {
+							}else{
+								// log_verify_code失效
+								console.log(res.data.Msg)
+								uni.removeStorageSync('user_info');
+								uni.reLaunch({
+									url: '/pages/index/index'
+								});
+							}
+						},
+						fail: (res) => {
+							console.log(res)
+						}
+					})
 			    }else {
 					console.log("未登录")
 					
@@ -152,7 +173,7 @@
 			// 正面
 			ChooseImage() {
 				uni.chooseImage({
-					count: 4, //默认9
+					count: 1, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					// sourceType: ['album'], //从相册选择
 					success: (res) => {

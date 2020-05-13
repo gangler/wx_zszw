@@ -87,6 +87,27 @@ export default {
 				this.isLogin = true
 		        // console.log(userinfo);
 				this.log_verify_code = userinfo.log_verify_code
+				uni.request({
+					url: configService.apiUrl + '/CheckLoginState',
+					data: {
+					    log_verify_code: this.log_verify_code,
+					},
+					success: (res) => {
+						console.log(res)
+						if(res.data.Result) {
+						}else{
+							// log_verify_code失效
+							console.log(res.data.Msg)
+							uni.removeStorageSync('user_info');
+							uni.reLaunch({
+								url: '/pages/index/index'
+							});
+						}
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
 		    }
 		} catch (e) {
 		    // error
