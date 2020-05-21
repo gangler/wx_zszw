@@ -84,7 +84,7 @@
 				<text class="text-lg">直接网上办理事项</text> 
 			</view>
 		</view>
-		<scroll-view style="height:300px;" :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltoupper="upper" @scrolltolower="lower"
+		<scroll-view style="height:600rpx;" :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltoupper="upper" @scrolltolower="lower"
 		@scroll="scroll">
 			<view class="cu-list menu">
 				<view class="cu-item" v-for="(item, index) in hotlist" :index="index" :key="index">

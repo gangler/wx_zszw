@@ -83,6 +83,15 @@
 		},
 		{
 			"path":"pages/login/wechat/wechat-login"
+		},
+		{
+			"path":"pages/public/index"
+		},
+		{
+			"path":"pages/public/public-list"
+		},
+		{
+			"path":"pages/public/public-detail"
 		}
 		
 	],
