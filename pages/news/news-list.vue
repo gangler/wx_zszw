@@ -28,7 +28,7 @@
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
 				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item, index) in categorylist" :index="index" :key="index" @tap="tabSelect" @click="getNewsList(index)" :data-id="index" :data-catid="index+1">
-					<text>{{item}}</text>
+					<text class="text-lg">{{item}}</text>
 				</view>
 			</view>
 		</scroll-view>
@@ -38,18 +38,17 @@
 				<view class="cu-avatar lg" :style="'background-image:url(' + item.picture + ');width:120rpx;'">
 				</view>
 				<view class="content padding-sm">
-					<view class="text-grey">
-						<view class="text-cut text-black">{{item.title}}</view>
+					<view class="text-grey" style="width: 500rpx;">
+						<view class="text-cut text-black text-lg">{{item.title}}</view>
 					</view>
-					<view class="text-gray text-sm flex">
+					<view class="text-gray text-df flex" style="width: 500rpx;">
 						<view class="text-cut">
 							{{item.brief}}
 						</view>
 					</view>
 				</view>
 				<view class="action">
-					<view class="text-blue text-xs">{{Math.floor((new Date().getTime()-new Date(item.publishTime.replace(/\-/g, "/")).getTime())/(24*3600*1000))}}天前</view>
-					<!-- <view class="cuIcon-notice_forbid_fill text-gray"></view> -->
+					<view class="text-blue text-sm">{{item.publishTime}}天前</view>
 				</view>
 			</view>
 			<!-- <view class="cu-item" v-for="(item, index) in newslist" :index="index" :key="index" @click="newsClick(item.informationId)">
@@ -135,8 +134,14 @@
 							// console.log(this.levellist)
 							// Math.floor((new Date().getTime()-new Date(item.publishTime.replace(/\-/g, "/")).getTime())/(24*3600*1000))
 							this.newslist.forEach((val) => {
-								console.log(val.publishTime)
-								
+								// console.log(val.publishTime)
+								let valDate = new Date(val.publishTime.replace(/\-/g, "/")).getTime()
+								// console.log('valDate',valDate)
+								let nowDate = new Date().getTime()
+								// console.log('nowDate',nowDate)
+								let days = Math.floor((nowDate-valDate)/(24*3600*1000))
+								// console.log('days',days)
+								val.publishTime = days
 							})
 						}
 					})

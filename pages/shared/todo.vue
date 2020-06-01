@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content">{{AffairName}}</block></cu-custom>
+		<cu-custom bgColor="bg-darkblue" :isBack="true"><block slot="backText"></block><block slot="content"></block></cu-custom>
 		<web-view :src="allUrl" ></web-view>
 	<!-- 	<view :style="'height:'+viewHeight+'px;position: relative;'" >
 			<view class="bottom-but">
@@ -26,18 +26,9 @@
 	
 	export default {
 		onLoad: function (option) {
-			if (option && option.Affairid) {
-				this.Affairid = option.Affairid;
-			}
-			if (option && option.AffairCode) {
-				this.AffairCode = option.AffairCode;
-			}
-			if (option && option.AffairName) {
-				this.AffairName = option.AffairName;
-			}
-			if (option && option.IsNetAccepet) {
-				this.IsNetAccepet = option.IsNetAccepet;
-			}
+			// if (option && option.UserId) {
+			// 	this.UserId = option.UserId;
+			// }
 			try {
 			    const userinfo = uni.getStorageSync('user_info');
 			    if (userinfo) {
@@ -48,14 +39,11 @@
 			    // error
 				console.log(e)
 			}
+			
 			// let fileUrl = encodeURIComponent(
 			// 	'http://47.101.41.168:8014/Affairs/ShowFile?filePath=/YmsFileUpload/AffairGuidFiles/CGZ003.pdf')
 			// this.allUrl = this.viewerUrl 
-			this.allUrl = configService.pdfUrl + '?Affairid=' + this.Affairid 
-						+ '&AffairCode=' + this.AffairCode 
-						+ '&AffairName=' + this.AffairName 
-						+ '&IsNetAccepet=' + this.IsNetAccepet
-						+ '&UserId=' + this.userId
+			this.allUrl = configService.baseUrl + '/affairs/commissionHistory?userid=' + this.userId
 			console.log(this.allUrl)
 		},
 		created() {
@@ -67,10 +55,6 @@
 		},
 		data() {
 			return {
-				Affairid: 105,
-				AffairCode: 'CGZ003',
-				AffairName: '户外广告设置的审批',
-				IsNetAccepet: 3,
 				// viewerUrl: '/html/web/viewer.html',
 				allUrl: '',
 				pdfviewHeight: 550,
@@ -80,17 +64,6 @@
 			}
 		},
 		methods: {
-			getWorkList(workname) {
-				uni.navigateTo({
-				    url: '../work/work-table?name=' + workname + '&affairId=' + this.Affairid
-				});
-			}
-			// getMessage(event) {
-			// 	uni.showModal({
-			// 		content: JSON.stringify(event.detail),
-			// 		showCancel: false
-			// 	});
-			// }
 		}
 	}
 </script>

@@ -92,6 +92,9 @@
 		},
 		{
 			"path":"pages/public/public-detail"
+		},
+		{
+			"path":"pages/shared/todo"
 		}
 		
 	],

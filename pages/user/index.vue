@@ -122,7 +122,16 @@
 						</view>
 					</button>
 				</view>
-				<view class="cu-item arrow" @click="myAdvice">
+				<view class="cu-item arrow" @click="myToDo">
+						<button class="cu-btn content" >
+							<image src="/static/img/advice2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
+							<view class="content padding-tb-sm">
+								<view>
+									<text class="text-blue margin-right-xs"></text> 我的代办</view>
+							</view>
+						</button>
+					</view>
+			<!-- 	<view class="cu-item arrow" @click="myAdvice">
 					<button class="cu-btn content" >
 						<image src="/static/img/advice2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
 						<view class="content padding-tb-sm">
@@ -130,7 +139,7 @@
 								<text class="text-blue margin-right-xs"></text> 我的咨询</view>
 						</view>
 					</button>
-				</view>
+				</view> -->
 				<view class="cu-item arrow" @click="mySetting">
 					<button class="cu-btn content" >
 						<image src="/static/img/setting2.png" style="width: 30px;height: 30px;margin-right: 20px;" class="png" mode="aspectFit"></image>
@@ -257,6 +266,16 @@
 				if(this.isLogin) {
 					uni.navigateTo({
 						url: '/pages/user/user-service'
+					})
+				}else{
+					this.loginModalVisible = true
+				}
+			},
+			// 我的代办
+			myToDo() {
+				if(this.isLogin) {
+					uni.navigateTo({
+						url: '/pages/shared/todo'
 					})
 				}else{
 					this.loginModalVisible = true
