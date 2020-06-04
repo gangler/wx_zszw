@@ -335,7 +335,7 @@
 				uni.request({
 					url: configService.apiUrl + '/get_base_dic',
 					success: (res) => {
-						// console.log(res.data)
+						console.log(res.data)
 						let doclist = res.data.Data.D999
 						doclist.forEach((val) => {
 							// console.log(val)
@@ -523,8 +523,8 @@
 									console.log(resp)
 									// 提交成功
 									this.warnModel('提交成功')
-									uni.reLaunch({
-										url: '/pages/index/index'
+									uni.navigateBack({
+										delta: 1
 									})
 								}
 							}
